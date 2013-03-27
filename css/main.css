@@ -1,0 +1,31 @@
+/**
+ * @outputFile main.css
+ * @main sass file
+ * main.scss file for all basic styles
+ *
+ * 8/10/12
+ * Mojiferous
+ */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/MAMP\/htdocs\/wwone\/sass\/main\.scss}line{font-family:\0000311}}
+body {
+  margin: 0;
+}
+
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/MAMP\/htdocs\/wwone\/sass\/main\.scss}line{font-family:\0000315}}
+canvas {
+  margin: 0;
+}
+
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/MAMP\/htdocs\/wwone\/sass\/main\.scss}line{font-family:\0000319}}
+#board-canvas {
+  position: absolute;
+  left: 0px;
+  top: 0px;
+}
+
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/MAMP\/htdocs\/wwone\/sass\/main\.scss}line{font-family:\0000325}}
+#ui-canvas {
+  position: absolute;
+  left: 0px;
+  top: 600px;
+}

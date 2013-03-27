@@ -1,0 +1,29 @@
+/**
+ * @outputFile main.css
+ * @main sass file
+ * main.scss file for all basic styles
+ *
+ * 8/10/12
+ * Mojiferous
+ */
+@import "base";
+
+body {
+  margin: 0;
+}
+
+canvas {
+  margin: 0;
+}
+
+#board-canvas {
+  position: absolute;
+  left: 0px;
+  top: 0px;
+}
+
+#ui-canvas {
+  position: absolute;
+  left: 0px;
+  top: 600px
+}
