@@ -22,9 +22,10 @@ function Robot(x, y, dir, map, type) {
   this.yLoc = y;
   this.mainMap = map;
 
-  this.mainMap.overlay[x][y] = this.type;
-
+  //set the robot type
   this.type = type;
+  //set the main map overlay square
+  this.mainMap.overlay[x][y] = this.type;
 
   this.direction = dir;
 }
@@ -45,7 +46,7 @@ Robot.prototype.handleTick = function(newMap) {
 Robot.prototype.handleMove = function() {
   //I'm not here any longer (or at least I shouldn't be), so clear the last overlay and redraw the tile
   this.mainMap.overlay[this.xLoc][this.yLoc] = 0;
-  this.mainMap.drawTile(this.xLoc, this.yLoc);
+  this.mainMap.redrawTile(this.xLoc, this.yLoc);
 
   switch (this.direction) {
     case 1:
@@ -54,7 +55,15 @@ Robot.prototype.handleMove = function() {
         //there is nothing above me, move up there
         this.yLoc = this.yLoc - 1;
       } else {
-        this.handleTurn();
+        if(this.mainMap.returnObstacleType(this.xLoc, (this.yLoc-1)) > 49) {
+          //the value 50 or more indicates a human. move into it and destroy it!
+          this.yLoc = this.yLoc - 1;
+          this.mainMap.destroyHumanoid(this.xLoc, this.yLoc);
+        } else {
+          //otherwise, turn!
+          this.handleTurn();
+        }
+
       }
       break;
 
@@ -64,7 +73,14 @@ Robot.prototype.handleMove = function() {
         //there is nothing to my right, move over there
         this.xLoc = this.xLoc + 1;
       } else {
-        this.handleTurn();
+        if(this.mainMap.returnObstacleType((this.xLoc+1), this.yLoc) > 49) {
+          //the value 50 or more indicates a human. move into it and destroy it!
+          this.xLoc = this.xLoc + 1;
+          this.mainMap.destroyHumanoid(this.xLoc, this.yLoc);
+        } else {
+          //otherwise, turn!
+          this.handleTurn();
+        }
       }
       break;
 
@@ -74,7 +90,14 @@ Robot.prototype.handleMove = function() {
         //there is nothing below me, move down there
         this.yLoc = this.yLoc + 1;
       } else {
-        this.handleTurn();
+        if(this.mainMap.returnObstacleType(this.xLoc, (this.yLoc+1)) > 49) {
+          //the value 50 or more indicates a human. move into it and destroy it!
+          this.yLoc = this.yLoc + 1;
+          this.mainMap.destroyHumanoid(this.xLoc, this.yLoc);
+        } else {
+          //otherwise, turn!
+          this.handleTurn();
+        }
       }
       break;
 
@@ -84,13 +107,20 @@ Robot.prototype.handleMove = function() {
         //there is nothing to my left, move over there
         this.xLoc = this.xLoc - 1;
       } else {
-        this.handleTurn();
+        if(this.mainMap.returnObstacleType((this.xLoc-1), this.yLoc) > 49) {
+          //the value 50 or more indicates a human. move into it and destroy it!
+          this.xLoc = this.xLoc - 1;
+          this.mainMap.destroyHumanoid(this.xLoc, this.yLoc);
+        } else {
+          //otherwise, turn!
+          this.handleTurn();
+        }
       }
       break;
   }
 
   this.mainMap.overlay[this.xLoc][this.yLoc] = this.type;
-  this.mainMap.drawTile(this.xLoc, this.yLoc);
+  this.mainMap.redrawTile(this.xLoc, this.yLoc);
 };
 
 /**

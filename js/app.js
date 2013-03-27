@@ -49,5 +49,5 @@ var t;
 
 function handleTick() {
   gUICanvas.handleTick();
-  t = setTimeout('handleTick()', 100);
+  t = setTimeout('handleTick()', 50);
 }

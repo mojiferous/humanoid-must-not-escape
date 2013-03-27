@@ -83,8 +83,23 @@ MainMap.prototype.initBoard = function() {
     }
   }
 
-  //no longer used call to set up rooms and mazes on the map
-//  this.setupMazes();
+  //add some invisible holes
+  this.initHoles();
+};
+
+/**
+ * adds random holes to the map
+ */
+MainMap.prototype.initHoles = function() {
+  var numHoles = Math.round(Math.random()*12)+1;
+
+  for(var n=0; n<numHoles; n++) {
+    //add holes to the map, but not on the leading edges where robots and human will be
+    var thisX = Math.round(Math.random()*(this.mapWidth-5))+2;
+    var thisY = Math.round(Math.random()*(this.mapHeight-5))+2;
+
+    this.tiles[thisX][thisY] = -1;
+  }
 };
 
 /**
@@ -94,6 +109,9 @@ MainMap.prototype.addRobot = function() {
   this.robots.push(new Robot(1, 1, 2, this, 1));
 };
 
+/**
+ * add a single human to the map
+ */
 MainMap.prototype.addHuman = function() {
   this.humans.push(new Human(10, 10, this));
 };
@@ -142,13 +160,21 @@ MainMap.prototype.checkForObstacles = function(x, y) {
 };
 
 /**
- * @todo deprecated
- * start drawing mazes through the walls of the level
+ * returns a value for the obstacle type of the passed block
+ * @param x
+ * @param y
+ * @returns int
  */
-MainMap.prototype.setupMazes = function() {
-//  var startingX = Math.round(Math.random()*this.mapWidth);
-
-//  this.mazeNodes.push(new Maze(startingX, this.mapHeight, this));
+MainMap.prototype.returnObstacleType = function(x, y) {
+  if(x >= 0 && y >= 0 && x < this.mapWidth && y < this.mapHeight) {
+    if(this.tiles[x][y] != 0) {
+      //the obstacle is on the tile layer, return 0 to indicate that this obstacle should just be avoided
+      return 0;
+    } else {
+      //return the overlay value, which should be the value of the block for human/robot/etc.
+      return this.overlay[x][y];
+    }
+  }
 };
 
 /**
@@ -159,8 +185,19 @@ MainMap.prototype.drawBoard = function() {
   for(x=0; x<this.mapWidth; x++) {
     for(y=0; y<this.mapHeight; y++) {
       this.drawTile(x, y);
+      this.drawOverlay(x, y);
     }
   }
+};
+
+/**
+ * re-render a specific tile
+ * @param x
+ * @param y
+ */
+MainMap.prototype.redrawTile = function(x, y) {
+  this.drawTile(x, y);
+  this.drawOverlay(x, y);
 };
 
 /**
@@ -175,6 +212,11 @@ MainMap.prototype.drawTile = function(x, y) {
 
   //figure out what tile is at this location and render its contents
   switch (this.tiles[x][y]) {
+    case -1:
+      //a hole in the floor
+      startX = 128;
+      startY = 64;
+      break;
     case 0:
       //block tiles
       startX = 96;
@@ -196,8 +238,19 @@ MainMap.prototype.drawTile = function(x, y) {
     this.drawCanvas.drawImage(this.tileset, startX, startY, 32, 32, (this.tileSize*x), (this.tileSize*y), this.tileSize, this.tileSize);
   }
 
+};
+
+/**
+ * handles the rendering of the "overlay" blocks, players and the like
+ * @param x
+ * @param y
+ */
+MainMap.prototype.drawOverlay = function(x, y) {
+  var startX = 0;
+  var startY = 0;
+  var useDefault = false;
+
   //now we will render the overlay blocks, such as robots etc.
-  useDefault = false;
   switch (this.overlay[x][y]) {
     case 1:
       //robot, right turning
@@ -245,5 +298,21 @@ MainMap.prototype.changeTile = function(rawX, rawY) {
   } else {
     this.tiles[locX][locY] = 0;
   }
-  this.drawTile(locX, locY);
+  this.redrawTile(locX, locY);
+};
+
+MainMap.prototype.destroyHumanoid = function(x, y) {
+  var destroyedHuman = -1;
+
+  for(var n=0; n<this.humans.length; n++) {
+    if(this.humans[n].xLoc == x && this.humans[n].yLoc == y) {
+      //destroy the humanoid at this location
+      destroyedHuman = n;
+    }
+  }
+
+  //remove the value from the array
+  if(destroyedHuman > -1) {
+    this.humans.splice(destroyedHuman, 1);
+  }
 };
