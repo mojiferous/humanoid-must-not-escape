@@ -15,6 +15,9 @@ var gTileSize = 32;
 var gTotalWidth = 18;
 var gTotalHeight = 18;
 
+var showRobotHeatMap = false;
+var showHumanHeatMap = false;
+
 var t;
 
 (function ($, window, document, undefined) {
@@ -36,7 +39,10 @@ var t;
 
       $(mainCanvas).click(function(obj) {
         //handle clicks on the main canvas
-        gCanvas.changeTile(obj.offsetX, obj.offsetY);
+        //gCanvas.changeTile(obj.offsetX, obj.offsetY);
+
+        showRobotHeatMap = !showRobotHeatMap;
+        gCanvas.drawBoard();
       });
 
       //start the timer!
@@ -48,6 +54,6 @@ var t;
 })(jQuery, this, this.document);
 
 function handleTick() {
-  gUICanvas.handleTick();
+//  gUICanvas.handleTick();
   t = setTimeout('handleTick()', 50);
 }
