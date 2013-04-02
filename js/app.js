@@ -18,6 +18,8 @@ var gTotalHeight = 18;
 var showRobotHeatMap = false;
 var showHumanHeatMap = false;
 
+var activeTool = 0;
+
 var t;
 
 (function ($, window, document, undefined) {
@@ -39,10 +41,15 @@ var t;
 
       $(mainCanvas).click(function(obj) {
         //handle clicks on the main canvas
-        //gCanvas.changeTile(obj.offsetX, obj.offsetY);
+        gCanvas.handleClick(obj.offsetX, obj.offsetY, activeTool);
 
-        showRobotHeatMap = !showRobotHeatMap;
-        gCanvas.drawBoard();
+//        showRobotHeatMap = !showRobotHeatMap;
+//        gCanvas.drawBoard();
+      });
+
+      $(uiCanvas).click(function(obj) {
+        //handle clicks on the UI canvas
+        gUICanvas.handleClick(obj.offsetX, obj.offsetY);
       });
 
       //start the timer!
@@ -53,7 +60,16 @@ var t;
 
 })(jQuery, this, this.document);
 
+/**
+ * game tick handler
+ */
 function handleTick() {
-//  gUICanvas.handleTick();
   t = setTimeout('handleTick()', 50);
+}
+
+/**
+ * helper function to redraw the board from within other classes
+ */
+function redrawBoard() {
+  gCanvas.drawBoard();
 }

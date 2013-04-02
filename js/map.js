@@ -76,23 +76,10 @@ MainMap.prototype.initBoard = function() {
       this.attractHumans[x][y] = 0;
       this.attractRobots[x][y] = 0;
 
-      if(x == 0 || y == 0 || x == (this.mapWidth-1) || y == (this.mapHeight-1)) {
-        //the edge is unbreakable blocks
-        this.tiles[x][y] = 2;
-        //nothing can penetrate the unbreakable blocks
-        this.overlay[x][y] = -1;
-
-        //the unbreakable blocks should never attract anyone
-        this.attractHumans[x][y] = -1000;
-        this.attractRobots[x][y] = -1000;
-
-      } else {
-        //the middle is tiles
-        this.tiles[x][y] = 0;
-        //a zero value on the overlay indicates a whole lot of nothing
-        this.overlay[x][y] = 0;
-
-      }
+      //everything is tiles
+      this.tiles[x][y] = 0;
+      //a zero value on the overlay indicates a whole lot of nothing
+      this.overlay[x][y] = 0;
 
     }
   }
@@ -134,7 +121,7 @@ MainMap.prototype.addHuman = function() {
 
 /**
  * return an array containing coordinates that do not contain other characters and are empty
- * @param centerX the x location to start reandom placement from
+ * @param centerX the x location to start random placement from
  * @param centerY the y location to start random placement from
  * @param range the range +/- the centerX,centerY point to search
  * @returns {Array}
@@ -178,6 +165,11 @@ MainMap.prototype.checkTile = function(x, y, checkVal) {
   if(x >= 0 && y >= 0 && x < this.mapWidth && y < this.mapHeight) {
     if(this.tiles[x][y] == checkVal) {
       return true;
+    } else {
+      //if we're passing -100, we're just checking boundaries
+      if(checkVal == -100) {
+        return true;
+      }
     }
   }
 
@@ -274,6 +266,9 @@ MainMap.prototype.redrawTile = function(x, y) {
  * @param y
  */
 MainMap.prototype.drawTile = function(x, y) {
+  //draw the background
+  this.drawCanvas.drawImage(this.tileset, 0, 0, 32, 32, (this.tileSize*x), (this.tileSize*y), this.tileSize, this.tileSize);
+
   var startX = 0;
   var startY = 0;
   var useDefault = true;
@@ -282,23 +277,19 @@ MainMap.prototype.drawTile = function(x, y) {
   switch (this.tiles[x][y]) {
     case -1:
       //a hole in the floor
-      startX = 128;
-      startY = 64;
+      startX = 160;
       break;
     case 0:
       //block tiles
-      startX = 96;
-      startY = 64;
+      useDefault = false;
       break;
     case 1:
       //walls
-      startX = 32;
-      startY = 32;
+      startX = 256;
       break;
     case 2:
       //unbreakable blocks
-      startX = 32;
-      startY = 64;
+      startX = 256;
       break;
   }
 
@@ -316,34 +307,48 @@ MainMap.prototype.drawTile = function(x, y) {
 MainMap.prototype.drawOverlay = function(x, y) {
   var startX = 0;
   var startY = 0;
-  var useDefault = false;
+  var useDefault = true;
 
   //now we will render the overlay blocks, such as robots etc.
   switch (this.overlay[x][y]) {
     case 1:
-      //robot, right turning
-      startX = 160;
-      startY = 544;
-      useDefault = true;
-      break;
-    case 2:
-      //robot, left turning
-      startX = 128;
-      startY = 544;
-      useDefault = true;
-      break;
-    case 3:
-      //random turning robot
-      startX = 96;
-      startY = 544;
-      useDefault = true;
+      //robot
+      startX = 64;
       break;
 
     case 50:
       //a human
       startX = 32;
-      startY = 672;
-      useDefault = true;
+      break;
+
+    case 101:
+      //fire
+      startX = 96;
+      break;
+    case 102:
+      //water
+      startX = 128;
+      break;
+    case 103:
+      //food
+      startX = 192;
+      break;
+    case 105:
+      //gold
+      startX = 288;
+      break;
+    case 106:
+      //electricity
+      startX = 320;
+      break;
+    case 107:
+      //gears
+      startX = 352;
+      break;
+
+    default:
+      useDefault = false;
+      break;
   }
 
   if(useDefault) {
@@ -427,20 +432,216 @@ MainMap.prototype.drawHumanHeatMap = function(x, y) {
 };
 
 /**
+ * returns a boolean value if the value is a valid change value for the tile
+ * @param locX
+ * @param locY
+ * @param value
+ * @returns {boolean}
+ */
+MainMap.prototype.canChangeTile = function(locX, locY, value) {
+  var retVal = false;
+
+  if(this.checkForObstacles(locX, locY)) {
+
+    //there is something here, possibly a block or an overlay -- check below
+    if(this.tiles[locX][locY] == 0) {
+      //this is not a hole, a block, or something else placed by the computer and can't be changed by a click
+      switch (this.returnObstacleType(locX, locY)) {
+        case 101:
+          //fire
+          if(value == 2 || value == 4) {
+            //water and walls can be placed on fire
+            retVal = true;
+          }
+          break;
+        case 102:
+          //water
+          if(value == 4) {
+            //walls may be placed on fire
+            retVal = true;
+          }
+          break;
+        case 103:
+          //food
+          break;
+        case 105:
+          //gold
+          break;
+        case 106:
+          //electricity
+          break;
+        case 107:
+          //gears
+          break;
+
+      }
+
+    }
+
+  } else {
+    //there is nothing here!
+    retVal = true;
+
+  }
+
+  return retVal;
+};
+
+/**
+ * check and change a tile if there is a value passed
+ * @param locX
+ * @param locY
+ * @param value
+ */
+MainMap.prototype.checkTileforChange = function(locX, locY, value) {
+  if(this.checkTile(locX, locY, -100)) {
+    //make sure this tile is in bounds first
+
+    if(this.canChangeTile(locX, locY, value)) {
+      if(value == 4) {
+        //this is a wall
+        this.tiles[locX][locY] = 1;
+        //make sure the overlay is cleared
+        this.overlay[locX][locY] = 0;
+      } else {
+        this.overlay[locX][locY] = value+100;
+      }
+
+      this.remapHeatMaps();
+    }
+
+  }
+};
+
+/**
  * handle tile clicks on the map
  * @param rawX
  * @param rawY
+ * @param value
  */
-MainMap.prototype.changeTile = function(rawX, rawY) {
+MainMap.prototype.handleClick = function(rawX, rawY, value) {
   var locX = Math.floor(rawX/this.tileSize);
   var locY = Math.floor(rawY/this.tileSize);
 
-  if(this.tiles[locX][locY] == 0) {
-    this.tiles[locX][locY] = 1;
-  } else {
-    this.tiles[locX][locY] = 0;
+  if(value > 0 && value < 8) {
+    //this is a block type
+    this.checkTileforChange(locX, locY, value);
   }
+
+
   this.redrawTile(locX, locY);
+};
+
+/**
+ * remaps all the heatmaps
+ */
+MainMap.prototype.remapHeatMaps = function() {
+  for(var x=0; x<this.mapWidth; x++) {
+    for(var y=0; y<this.mapHeight; y++) {
+      //first, clear out the current heatmap
+      this.attractHumans[x][y] = 0;
+      this.attractRobots[x][y] = 0;
+    }
+  }
+
+  for(x=0; x<this.mapWidth; x++) {
+    for(y=0; y<this.mapHeight; y++) {
+      switch (this.overlay[x][y]) {
+        case 101:
+          //fire
+          this.heatMapChanger(x, y, -4, -4);
+          break;
+        case 102:
+          //water
+          this.heatMapChanger(x, y, 4, -4);
+          break;
+        case 103:
+          //food
+          this.heatMapChanger(x, y, 4, 0);
+          break;
+        case 105:
+          //gold
+          this.heatMapChanger(x, y, 4, 4);
+          break;
+        case 106:
+          //electricity
+          this.heatMapChanger(x, y, -4, 4);
+          break;
+        case 107:
+          //gears
+          this.heatMapChanger(x, y, 0, 4);
+          break;
+      }
+
+    }
+  }
+
+};
+
+/**
+ * change the heatmap values in a cross shape outwards from the target
+ * @param x
+ * @param y
+ * @param humanValue
+ * @param robotValue
+ */
+MainMap.prototype.heatMapChanger = function(x, y, humanValue, robotValue) {
+  this.changeHumanHeatMapValue(x, y, humanValue);
+  humanValue = humanValue/2;
+  this.changeHumanHeatMapValue(x-1, y, humanValue);
+  this.changeHumanHeatMapValue(x, y-1, humanValue);
+  this.changeHumanHeatMapValue(x+1, y, humanValue);
+  this.changeHumanHeatMapValue(x, y+1, humanValue);
+  humanValue = humanValue/2;
+  this.changeHumanHeatMapValue(x-2, y, humanValue);
+  this.changeHumanHeatMapValue(x-1,y-1, humanValue);
+  this.changeHumanHeatMapValue(x, y-2, humanValue);
+  this.changeHumanHeatMapValue(x+1, y-1, humanValue);
+  this.changeHumanHeatMapValue(x+2, y, humanValue);
+  this.changeHumanHeatMapValue(x+1, y+1, humanValue);
+  this.changeHumanHeatMapValue(x, y+2, humanValue);
+  this.changeHumanHeatMapValue(x-1, y+1, humanValue);
+
+  this.changeRobotHeatMapValue(x, y, robotValue);
+  robotValue = robotValue/2;
+  this.changeRobotHeatMapValue(x-1, y, robotValue);
+  this.changeRobotHeatMapValue(x, y-1, robotValue);
+  this.changeRobotHeatMapValue(x+1, y, robotValue);
+  this.changeRobotHeatMapValue(x, y+1, robotValue);
+  robotValue = robotValue/2;
+  this.changeRobotHeatMapValue(x-2, y, robotValue);
+  this.changeRobotHeatMapValue(x-1,y-1, robotValue);
+  this.changeRobotHeatMapValue(x, y-2, robotValue);
+  this.changeRobotHeatMapValue(x+1, y-1, robotValue);
+  this.changeRobotHeatMapValue(x+2, y, robotValue);
+  this.changeRobotHeatMapValue(x+1, y+1, robotValue);
+  this.changeRobotHeatMapValue(x, y+2, robotValue);
+  this.changeRobotHeatMapValue(x-1, y+1, robotValue);
+
+};
+
+/**
+ * change the human heat map value
+ * @param x
+ * @param y
+ * @param value
+ */
+MainMap.prototype.changeHumanHeatMapValue = function(x, y, value) {
+  if(x > 0 && x < this.mapWidth && y > 0 && y < this.mapHeight) {
+    this.attractHumans[x][y] += value;
+  }
+};
+
+/**
+ * change the robot heat map value
+ * @param x
+ * @param y
+ * @param value
+ */
+MainMap.prototype.changeRobotHeatMapValue = function(x, y, value) {
+  if(x > 0 && x < this.mapWidth && y > 0 && y < this.mapHeight) {
+    this.attractRobots[x][y] += value;
+  }
 };
 
 /**
