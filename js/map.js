@@ -42,8 +42,11 @@ function MainMap(mainCanvas, tileSize, mapWidth, mapHeight) {
   //initialize the board, including the overlay, all placement of blocks and characters must occur after this call
   this.initBoard();
 
-  this.addRobot();
-  this.addHuman();
+  for(var n=0; n<4; n++) {
+    this.addRobot();
+    this.addHuman();
+  }
+
 
   this.drawBoard();
 }
@@ -53,7 +56,12 @@ function MainMap(mainCanvas, tileSize, mapWidth, mapHeight) {
  */
 MainMap.prototype.handleTick = function() {
   for(var n=0; n<this.robots.length; n++) {
+    //move the robots
     this.robots[n].handleTick(this);
+  }
+  for(n=0; n<this.humans.length; n++) {
+    //move the humans
+    this.humans[n].handleTick(this);
   }
 };
 
@@ -107,7 +115,7 @@ MainMap.prototype.initHoles = function() {
  * adds a single robot to the map
  */
 MainMap.prototype.addRobot = function() {
-  var newPos = this.returnValidCharacterCoordinates(3, 3, 2);
+  var newPos = this.returnValidCharacterCoordinates(9, 9, 8);
   this.robots.push(new Robot(newPos['x'], newPos['y'], 2, this, 1));
 };
 
@@ -115,7 +123,7 @@ MainMap.prototype.addRobot = function() {
  * add a single human to the map
  */
 MainMap.prototype.addHuman = function() {
-  var newPos = this.returnValidCharacterCoordinates(15, 15, 2);
+  var newPos = this.returnValidCharacterCoordinates(9, 9, 8);
   this.humans.push(new Human(newPos['x'], newPos['y'], this));
 };
 
@@ -177,6 +185,34 @@ MainMap.prototype.checkTile = function(x, y, checkVal) {
 };
 
 /**
+ * helper function to return a robot heatmap value
+ * @param x
+ * @param y
+ * @returns {*}
+ */
+MainMap.prototype.returnRobotHeatMapValue = function(x, y) {
+  if(x >= 0 && y >= 0 && x < this.mapWidth && y < this.mapHeight) {
+    return this.attractRobots[x][y];
+  }
+
+  return -100;
+};
+
+/**
+ * helper function to return a human heatmap value
+ * @param x
+ * @param y
+ * @returns {*}
+ */
+MainMap.prototype.returnHumanHeatMapValue = function(x, y) {
+  if(x >= 0 && y >= 0 && x < this.mapWidth && y < this.mapHeight) {
+    return this.attractHumans[x][y];
+  }
+
+  return -100;
+};
+
+/**
  * checks for obstacles on the passed block xy, and returns true if there is an obstacle
  * @param x
  * @param y
@@ -188,17 +224,36 @@ MainMap.prototype.checkForObstacles = function(x, y) {
       //this is not a free tile, which means that this tile must be a block of some sort
       return true;
     } else {
-      if(this.overlay[x][y] != 0) {
-        //there may be a free tile, but there is something on this block, like another robot
-        return true;
-      } else {
-        //not only is the tile free, but there is nothing else on the block
-        return false;
-      }
+      return this.overlay[x][y] > 0;
     }
   }
 
   return true;
+};
+
+/**
+ * returns true if there is no obstacle to movement on the tile, which includes overlay items that are not other people or robots
+ * @param x
+ * @param y
+ * @returns {boolean}
+ */
+MainMap.prototype.checkForMovementObstacles = function(x, y) {
+  if(x >= 0 && y >= 0 && x < this.mapWidth && y < this.mapHeight) {
+    if(this.tiles[x][y] > 0) {
+      //this is not a free tile, which means that this tile must be a block of some sort
+      return false;
+    } else {
+      if(this.overlay[x][y] > 0 && this.overlay[x][y] < 100) {
+        //this is a human or robot
+        return false;
+      }
+
+      //only return true if the tile is something we can step on, either intentionally or accidentally
+      return true;
+    }
+  }
+
+  return false;
 };
 
 /**
@@ -217,6 +272,8 @@ MainMap.prototype.returnObstacleType = function(x, y) {
       return this.overlay[x][y];
     }
   }
+
+  return -1;
 };
 
 /**
@@ -319,6 +376,11 @@ MainMap.prototype.drawOverlay = function(x, y) {
     case 50:
       //a human
       startX = 32;
+      break;
+
+    case -1:
+      //a skull
+      startX = 224;
       break;
 
     case 101:
@@ -508,6 +570,7 @@ MainMap.prototype.checkTileforChange = function(locX, locY, value) {
       }
 
       this.remapHeatMaps();
+      this.handleTick();
     }
 
   }
@@ -627,7 +690,7 @@ MainMap.prototype.heatMapChanger = function(x, y, humanValue, robotValue) {
  * @param value
  */
 MainMap.prototype.changeHumanHeatMapValue = function(x, y, value) {
-  if(x > 0 && x < this.mapWidth && y > 0 && y < this.mapHeight) {
+  if(x >= 0 && x < this.mapWidth && y >= 0 && y < this.mapHeight) {
     this.attractHumans[x][y] += value;
   }
 };
@@ -639,7 +702,7 @@ MainMap.prototype.changeHumanHeatMapValue = function(x, y, value) {
  * @param value
  */
 MainMap.prototype.changeRobotHeatMapValue = function(x, y, value) {
-  if(x > 0 && x < this.mapWidth && y > 0 && y < this.mapHeight) {
+  if(x >= 0 && x < this.mapWidth && y >= 0 && y < this.mapHeight) {
     this.attractRobots[x][y] += value;
   }
 };
@@ -663,6 +726,10 @@ MainMap.prototype.destroyHumanoid = function(x, y) {
   if(destroyedHuman > -1) {
     this.humans.splice(destroyedHuman, 1);
   }
+
+  //add the skull
+  this.overlay[x][y] = -1;
+  this.redrawTile(x, y);
 };
 
 /**
@@ -684,4 +751,113 @@ MainMap.prototype.destroyRobot = function(x, y) {
   if(destroyedRobot > -1) {
     this.robots.splice(destroyedRobot, 1);
   }
+
+  //add the skull
+  this.overlay[x][y] = -1;
+  this.redrawTile(x, y);
+};
+
+/**
+ * kill our friendly robot if they have stepped on something bad
+ * @param x
+ * @param y
+ * @return {boolean}
+ */
+MainMap.prototype.checkForRobotDeath = function(x, y) {
+  var isDead = false;
+
+  if(this.checkForObstacles(x, y)) {
+    var obsType = this.returnObstacleType(x, y);
+    if(obsType > 100) {
+      //there is a legit obstacle here
+      switch (obsType) {
+        case 101:
+          //fire. kill
+          this.destroyRobot(x, y);
+          isDead = true;
+          break;
+        case 102:
+          //water. kill
+          this.destroyRobot(x, y);
+          isDead = true;
+          break;
+        case 103:
+          //food. meh
+          break;
+        case 105:
+          //gold, meh
+          break;
+        case 106:
+          //electricity. yes.
+          break;
+        case 107:
+          //gears. meh
+          break;
+      }
+
+    } else if(obsType == 0) {
+      //is this a hole?
+      if(this.tiles[x][y] == -1) {
+        //yep. kill the robot
+        this.destroyRobot(x, y);
+        isDead = true;
+      }
+
+    }
+  }
+
+  return isDead;
+
+};
+
+/**
+ * same as above, just with people
+ * @param x
+ * @param y
+ * @returns {boolean}
+ */
+MainMap.prototype.checkForHumanDeath = function(x, y) {
+  var isDead = false;
+
+  if(this.checkForObstacles(x, y)) {
+    var obsType = this.returnObstacleType(x, y);
+    if(obsType > 100) {
+      //there is a legit obstacle here
+      switch (obsType) {
+        case 101:
+          //fire. kill
+          this.destroyHumanoid(x, y);
+          isDead = true;
+          break;
+        case 102:
+          //water. meh
+          break;
+        case 103:
+          //food. meh
+          break;
+        case 105:
+          //gold, meh
+          break;
+        case 106:
+          //electricity. kill!
+          this.destroyHumanoid(x, y);
+          isDead = true;
+          break;
+        case 107:
+          //gears. meh
+          break;
+      }
+
+    } else if(obsType == 0) {
+      //is this a hole?
+      if(this.tiles[x][y] == -1) {
+        //yep. kill the human
+        this.destroyHumanoid(x, y);
+        isDead = true;
+      }
+
+    }
+  }
+
+  return isDead;
 };

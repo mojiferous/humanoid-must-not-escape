@@ -44,108 +44,143 @@ Robot.prototype.handleTick = function(newMap) {
  * handle the movement of the robot
  */
 Robot.prototype.handleMove = function() {
-  //I'm not here any longer (or at least I shouldn't be), so clear the last overlay and redraw the tile
+  //I may not be here any longer, so clear the last overlay and redraw the tile
   this.mainMap.overlay[this.xLoc][this.yLoc] = 0;
   this.mainMap.redrawTile(this.xLoc, this.yLoc);
 
-  switch (this.direction) {
-    case 1:
-      //moving up
-      if(!this.mainMap.checkForObstacles(this.xLoc, (this.yLoc-1))) {
-        //there is nothing above me, move up there
-        this.yLoc = this.yLoc - 1;
-      } else {
-        if(this.mainMap.returnObstacleType(this.xLoc, (this.yLoc-1)) > 49) {
-          //the value 50 or more indicates a human. move into it and destroy it!
-          this.yLoc = this.yLoc - 1;
-          this.mainMap.destroyHumanoid(this.xLoc, this.yLoc);
-        } else {
-          //otherwise, turn!
-          this.handleTurn();
-        }
+  var currentVal = this.mainMap.returnRobotHeatMapValue(this.xLoc, this.yLoc);
 
-      }
-      break;
-
-    case 2:
-      //moving right
-      if(!this.mainMap.checkForObstacles((this.xLoc+1), this.yLoc)) {
-        //there is nothing to my right, move over there
-        this.xLoc = this.xLoc + 1;
-      } else {
-        if(this.mainMap.returnObstacleType((this.xLoc+1), this.yLoc) > 49) {
-          //the value 50 or more indicates a human. move into it and destroy it!
-          this.xLoc = this.xLoc + 1;
-          this.mainMap.destroyHumanoid(this.xLoc, this.yLoc);
-        } else {
-          //otherwise, turn!
-          this.handleTurn();
-        }
-      }
-      break;
-
-    case 3:
-      //moving down
-      if(!this.mainMap.checkForObstacles(this.xLoc, (this.yLoc+1))) {
-        //there is nothing below me, move down there
-        this.yLoc = this.yLoc + 1;
-      } else {
-        if(this.mainMap.returnObstacleType(this.xLoc, (this.yLoc+1)) > 49) {
-          //the value 50 or more indicates a human. move into it and destroy it!
-          this.yLoc = this.yLoc + 1;
-          this.mainMap.destroyHumanoid(this.xLoc, this.yLoc);
-        } else {
-          //otherwise, turn!
-          this.handleTurn();
-        }
-      }
-      break;
-
-    case 4:
-      //moving left
-      if(!this.mainMap.checkForObstacles((this.xLoc-1), this.yLoc)) {
-        //there is nothing to my left, move over there
-        this.xLoc = this.xLoc - 1;
-      } else {
-        if(this.mainMap.returnObstacleType((this.xLoc-1), this.yLoc) > 49) {
-          //the value 50 or more indicates a human. move into it and destroy it!
-          this.xLoc = this.xLoc - 1;
-          this.mainMap.destroyHumanoid(this.xLoc, this.yLoc);
-        } else {
-          //otherwise, turn!
-          this.handleTurn();
-        }
-      }
-      break;
+  var newVal = this.returnBestMove(this.xLoc, this.yLoc, currentVal);
+  if(newVal != 0) {
+    switch (newVal) {
+      case 1:
+        //moving on up
+        this.yLoc--;
+        break;
+      case 2:
+        //up right
+        this.xLoc++;
+        this.yLoc--;
+        break;
+      case 3:
+        //right
+        this.xLoc++;
+        break;
+      case 4:
+        //down right
+        this.xLoc++;
+        this.yLoc++;
+        break;
+      case 5:
+        //down
+        this.yLoc++;
+        break;
+      case 6:
+        //down left
+        this.yLoc++;
+        this.xLoc--;
+        break;
+      case 7:
+        //left
+        this.xLoc--;
+        break;
+      case 8:
+        //up left
+        this.xLoc--;
+        this.yLoc--;
+        break;
+    }
   }
 
-  this.mainMap.overlay[this.xLoc][this.yLoc] = this.type;
-  this.mainMap.redrawTile(this.xLoc, this.yLoc);
+
+
+  if(!this.mainMap.checkForRobotDeath(this.xLoc, this.yLoc)) {
+    //yay! I'm still alive
+    this.mainMap.overlay[this.xLoc][this.yLoc] = this.type;
+    this.mainMap.redrawTile(this.xLoc, this.yLoc);
+  }
+
 };
 
 /**
- * handle robot turns
+ * checks the robot heat map value and looks for obstacles at the passed location
+ * @param x
+ * @param y
+ * @param zeroVal
+ * @returns {*}
  */
-Robot.prototype.handleTurn = function() {
-  switch (this.type) {
-    case 1:
-      //right turning robot
-      this.direction++;
-      break;
-    case 2:
-      //left turning robot
-      this.direction--;
-      break;
-    case 3:
-      //this is a random turning robot
-      this.direction = Math.round((Math.random()*3)+1);
-      break;
+Robot.prototype.moveLocationChecker = function(x, y, zeroVal) {
+  var newVal = this.mainMap.returnRobotHeatMapValue(x, y);
+  if(newVal > zeroVal) {
+    if(this.mainMap.checkForMovementObstacles(x, y)) {
+      //there is no obstacle here
+      return newVal;
+    } else {
+      //avoid any obstacles, whether on the overlay or not
+      return -1000;
+    }
+
   }
 
-  if(this.direction > 4) {
-    this.direction = 1;
+  return zeroVal;
+};
+
+/**
+ * check all around the robot and return the best possible place to move
+ * @param x
+ * @param y
+ * @param zeroVal
+ * @returns {number}
+ */
+Robot.prototype.returnBestMove = function(x, y, zeroVal) {
+  var bestLocation = 0;
+
+  var nZero = this.moveLocationChecker(x, y-1, zeroVal);
+  if(nZero > zeroVal) {
+    zeroVal = nZero;
+    bestLocation = 1;
   }
-  if(this.direction < 1) {
-    this.direction = 4;
+
+  nZero = this.moveLocationChecker(x+1, y-1, zeroVal);
+  if(nZero > zeroVal) {
+    zeroVal = nZero;
+    bestLocation = 2;
   }
+
+  nZero = this.moveLocationChecker(x+1, y, zeroVal);
+  if(nZero > zeroVal) {
+    zeroVal = nZero;
+    bestLocation = 3;
+  }
+
+  nZero = this.moveLocationChecker(x+1, y+1, zeroVal);
+  if(nZero > zeroVal) {
+    zeroVal = nZero;
+    bestLocation = 4;
+  }
+
+  nZero = this.moveLocationChecker(x, y+1, zeroVal);
+  if(nZero > zeroVal) {
+    zeroVal = nZero;
+    bestLocation = 5;
+  }
+
+  nZero = this.moveLocationChecker(x-1, y+1, zeroVal);
+  if(nZero > zeroVal) {
+    zeroVal = nZero;
+    bestLocation = 6;
+  }
+
+  nZero = this.moveLocationChecker(x-1, y, zeroVal);
+  if(nZero > zeroVal) {
+    zeroVal = nZero;
+    bestLocation = 7;
+  }
+
+  nZero = this.moveLocationChecker(x-1, y-1, zeroVal);
+  if(nZero > zeroVal) {
+    bestLocation = 8;
+  }
+
+  return bestLocation;
 };
