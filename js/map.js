@@ -65,6 +65,9 @@ MainMap.prototype.handleTick = function() {
     //move the humans
     this.humans[n].handleTick(this);
   }
+
+  //redraw the heatmaps at the end of the movement turns
+  this.remapHeatMaps();
 };
 
 /**
@@ -660,6 +663,8 @@ MainMap.prototype.remapHeatMaps = function() {
     }
   }
 
+  //redraw the entire board after re-mapping the heatmaps
+  this.drawBoard();
 };
 
 /**

@@ -13,7 +13,6 @@
  * @param x the x location of the robot
  * @param y the y location of the robot
  * @param map the mainMap object
- * @param type the type of robot this is
  * @constructor
  */
 function Robot(x, y, map) {
