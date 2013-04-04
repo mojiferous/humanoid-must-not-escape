@@ -20,6 +20,8 @@ var showHumanHeatMap = false;
 
 var activeTool = 0;
 
+var numAnimations = 0;
+
 var t;
 
 (function ($, window, document, undefined) {
@@ -41,7 +43,10 @@ var t;
 
       $(mainCanvas).click(function(obj) {
         //handle clicks on the main canvas
-        gCanvas.handleClick(obj.offsetX, obj.offsetY, activeTool);
+        if(numAnimations == 0) {
+          gCanvas.handleClick(obj.offsetX, obj.offsetY, activeTool);
+        }
+
 
 //        showRobotHeatMap = !showRobotHeatMap;
 //        gCanvas.drawBoard();
@@ -64,6 +69,9 @@ var t;
  * game tick handler
  */
 function handleTick() {
+  if(numAnimations > 0) {
+    gCanvas.handleAnimation();
+  }
   t = setTimeout('handleTick()', 50);
 }
 

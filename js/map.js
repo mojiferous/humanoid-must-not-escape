@@ -55,6 +55,8 @@ function MainMap(mainCanvas, tileSize, mapWidth, mapHeight) {
  * handle a game tick
  */
 MainMap.prototype.handleTick = function() {
+  numAnimations = 0;
+
   for(var n=0; n<this.robots.length; n++) {
     //move the robots
     this.robots[n].handleTick(this);
@@ -63,6 +65,22 @@ MainMap.prototype.handleTick = function() {
     //move the humans
     this.humans[n].handleTick(this);
   }
+};
+
+/**
+ * handle animations at the end of a turn
+ */
+MainMap.prototype.handleAnimation = function() {
+  this.drawBoard();
+  for(var n=0; n<this.robots.length; n++) {
+    //move the robots
+    this.robots[n].handleAnimation(this);
+  }
+  for(n=0; n<this.humans.length; n++) {
+    //move the humans
+    this.humans[n].handleAnimation(this);
+  }
+
 };
 
 /**
@@ -116,7 +134,7 @@ MainMap.prototype.initHoles = function() {
  */
 MainMap.prototype.addRobot = function() {
   var newPos = this.returnValidCharacterCoordinates(9, 9, 8);
-  this.robots.push(new Robot(newPos['x'], newPos['y'], 2, this, 1));
+  this.robots.push(new Robot(newPos['x'], newPos['y'], this));
 };
 
 /**
@@ -245,6 +263,9 @@ MainMap.prototype.checkForMovementObstacles = function(x, y) {
     } else {
       if(this.overlay[x][y] > 0 && this.overlay[x][y] < 100) {
         //this is a human or robot
+        return false;
+      } else if(this.overlay[x][y] == -2000) {
+        //this is a temporary marker so multiple humans or robots don't move to the same square
         return false;
       }
 

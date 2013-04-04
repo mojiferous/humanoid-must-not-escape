@@ -16,6 +16,9 @@ function Human(x, y, map) {
   this.mainMap = map;
 
   this.mainMap.overlay[x][y] = 50;
+
+  //animation coordinates
+  resetAnimationVariables(this);
 }
 
 /**
@@ -38,56 +41,55 @@ Human.prototype.handleMove = function() {
 
   var currentVal = this.mainMap.returnHumanHeatMapValue(this.xLoc, this.yLoc);
 
-  var newVal = this.returnBestMove(this.xLoc, this.yLoc, currentVal);
-  if(newVal != 0) {
-    switch (newVal) {
-      case 1:
-        //moving on up
-        this.yLoc--;
-        break;
-      case 2:
-        //up right
-        this.xLoc++;
-        this.yLoc--;
-        break;
-      case 3:
-        //right
-        this.xLoc++;
-        break;
-      case 4:
-        //down right
-        this.xLoc++;
-        this.yLoc++;
-        break;
-      case 5:
-        //down
-        this.yLoc++;
-        break;
-      case 6:
-        //down left
-        this.yLoc++;
-        this.xLoc--;
-        break;
-      case 7:
-        //left
-        this.xLoc--;
-        break;
-      case 8:
-        //up left
-        this.xLoc--;
-        this.yLoc--;
-        break;
-    }
+  resetAnimationVariables(this);
+
+  var newVal = returnBestMove(this, this.xLoc, this.yLoc, currentVal);
+  handleMoveVars(this, newVal);
+
+  //by setting the overlay to -2000, we prevent other robots or humans from moving into our target square
+  this.mainMap.overlay[this.xLoc][this.yLoc] = -2000;
+  if(this.xMove == 0 && this.yMove == 0){
+    //we're not moving anywhere, just set the tile -- animations run using a full refresh of the screen and then incremental drawing of human/robot movement
+    this.finalizeMove();
+  } else {
+    numAnimations++;
   }
 
+};
 
+/**
+ * handle movement animation for the human
+ * @param newMap
+ */
+Human.prototype.handleAnimation = function(newMap) {
+  this.mainMap = newMap;
 
+  this.animCount++;
+  if(this.animCount < 10) {
+    this.curX = this.curX + this.xMove;
+    this.curY = this.curY + this.yMove;
+    this.mainMap.drawCanvas.drawImage(this.mainMap.tileset, 32, 0, 32, 32, this.curX, this.curY, this.mainMap.tileSize, this.mainMap.tileSize);
+  } else {
+    this.finalizeMove();
+    if(this.xMove != 0 || this.yMove != 0) {
+      this.xMove = 0;
+      this.yMove = 0;
+      numAnimations--;
+    }
+
+  }
+
+};
+
+/**
+ * finalize human movement, setting the overlay tile and redrawing it, done here since the movement animation uses a full redraw before each tick
+ */
+Human.prototype.finalizeMove = function() {
   if(!this.mainMap.checkForHumanDeath(this.xLoc, this.yLoc)) {
     //yay! I'm still alive
     this.mainMap.overlay[this.xLoc][this.yLoc] = 50;
     this.mainMap.redrawTile(this.xLoc, this.yLoc);
   }
-
 };
 
 /**
@@ -111,64 +113,4 @@ Human.prototype.moveLocationChecker = function(x, y, zeroVal) {
   }
 
   return zeroVal;
-};
-
-/**
- * check all around the human and return the best possible place to move
- * @param x
- * @param y
- * @param zeroVal
- * @returns {number}
- */
-Human.prototype.returnBestMove = function(x, y, zeroVal) {
-  var bestLocation = 0;
-
-  var nZero = this.moveLocationChecker(x, y-1, zeroVal);
-  if(nZero > zeroVal) {
-    zeroVal = nZero;
-    bestLocation = 1;
-  }
-
-  nZero = this.moveLocationChecker(x+1, y-1, zeroVal);
-  if(nZero > zeroVal) {
-    zeroVal = nZero;
-    bestLocation = 2;
-  }
-
-  nZero = this.moveLocationChecker(x+1, y, zeroVal);
-  if(nZero > zeroVal) {
-    zeroVal = nZero;
-    bestLocation = 3;
-  }
-
-  nZero = this.moveLocationChecker(x+1, y+1, zeroVal);
-  if(nZero > zeroVal) {
-    zeroVal = nZero;
-    bestLocation = 4;
-  }
-
-  nZero = this.moveLocationChecker(x, y+1, zeroVal);
-  if(nZero > zeroVal) {
-    zeroVal = nZero;
-    bestLocation = 5;
-  }
-
-  nZero = this.moveLocationChecker(x-1, y+1, zeroVal);
-  if(nZero > zeroVal) {
-    zeroVal = nZero;
-    bestLocation = 6;
-  }
-
-  nZero = this.moveLocationChecker(x-1, y, zeroVal);
-  if(nZero > zeroVal) {
-    zeroVal = nZero;
-    bestLocation = 7;
-  }
-
-  nZero = this.moveLocationChecker(x-1, y-1, zeroVal);
-  if(nZero > zeroVal) {
-    bestLocation = 8;
-  }
-
-  return bestLocation;
 };
