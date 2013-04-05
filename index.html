@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <link href='http://fonts.googleapis.com/css?family=Press+Start+2P' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" type="text/css" href="css/main.css" />
+
   <script type="text/javascript" src="js/jquery-1.9.1.min.js"></script>
-  <script type="text/javascript" src="js/jquery-ui-1.10.2.min.js"></script>
   <script type="text/javascript" src="js/hrHelper.js"></script>
   <script type="text/javascript" src="js/robot.js"></script>
   <script type="text/javascript" src="js/human.js"></script>
@@ -16,6 +17,16 @@
     <canvas id="board-canvas" width="576" height="576"></canvas>
     <canvas id="ui-canvas" width="576" height="50"></canvas>
   </div>
+  <div class="control-overlay" id="controls">
+    1. <a id="kill-humans">KILL ALL HUMANS * SAVE ROBOTS</a><br/>
+    2. <a id="kill-robots">Kill all Robots, save the Humans</a><br/>
+    3. <a id="kill-all">Kill Them All</a><br/>
+  </div>
+
+  <div id="crt">
+    <div id="scan"></div>
+  </div>
+
   <div style="display: none" class="hidden">
     <img src="images/rhtileset.png" id="tileset2" />
   </div>

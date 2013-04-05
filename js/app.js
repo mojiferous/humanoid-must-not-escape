@@ -21,6 +21,7 @@ var showHumanHeatMap = false;
 var activeTool = 0;
 
 var numAnimations = 0;
+var scanTop = 0;
 
 var t;
 
@@ -41,20 +42,16 @@ var t;
 
       gCanvas = new MainMap(mainCanvas, gTileSize, gTotalWidth, gTotalHeight);
 
-      $(mainCanvas).click(function(obj) {
-        //handle clicks on the main canvas
-        if(numAnimations == 0) {
-          gCanvas.handleClick(obj.offsetX, obj.offsetY, activeTool);
+      $('#crt').click(function(e) {
+        //handle clicks on the crt div and pass them through to the underlying canvases
+        if(e.offsetY > 576) {
+          gUICanvas.handleClick(e.offsetX, (e.offsetY-576));
+        } else {
+          if(numAnimations ==0) {
+            gCanvas.handleClick(e.offsetX, e.offsetY, activeTool);
+          }
+
         }
-
-
-//        showRobotHeatMap = !showRobotHeatMap;
-//        gCanvas.drawBoard();
-      });
-
-      $(uiCanvas).click(function(obj) {
-        //handle clicks on the UI canvas
-        gUICanvas.handleClick(obj.offsetX, obj.offsetY);
       });
 
       //start the timer!
@@ -72,6 +69,12 @@ function handleTick() {
   if(numAnimations > 0) {
     gCanvas.handleAnimation();
   }
+  scanTop = scanTop-5;
+
+  if(scanTop < -64) {
+    scanTop = 690;
+  }
+  $('#scan').css('background-position', '0px '+scanTop+'px');
   t = setTimeout('handleTick()', 50);
 }
 
