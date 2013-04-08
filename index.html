@@ -17,10 +17,17 @@
     <canvas id="board-canvas" width="576" height="576"></canvas>
     <canvas id="ui-canvas" width="576" height="50"></canvas>
   </div>
-  <div class="control-overlay" id="controls">
-    1. <a id="kill-humans">KILL ALL HUMANS * SAVE ROBOTS</a><br/>
-    2. <a id="kill-robots">Kill all Robots, save the Humans</a><br/>
-    3. <a id="kill-all">Kill Them All</a><br/>
+  <div id="controls">
+    <div class="control-overlay" id="game-options">
+      RESOURCES<br/>
+      <span class="active" id="unlimited-resources">1. Unlimited</span><br/>
+      <span id="limited-resources">2. Limited</span><br/>
+    </div>
+    <div class="control-overlay" id="game-types">
+      1. <a id="kill-humans">KILL ALL HUMANS * SAVE ROBOTS</a><br/>
+      2. <a id="kill-robots">Kill all Robots, save the Humans</a><br/>
+      3. <a id="kill-all">Kill Them All</a><br/>
+    </div>
   </div>
 
   <div id="crt">

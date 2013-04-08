@@ -31,11 +31,18 @@ function MainMap(mainCanvas, tileSize, mapWidth, mapHeight) {
   //grab our tileset
   this.tileset = document.getElementById('tileset2');
 
-  //arrays of robot and human objects
+  this.initGame();
+}
+
+/**
+ * init a new game
+ */
+MainMap.prototype.initGame = function() {
+  //reset robot and human objects
   this.robots = [];
   this.humans = [];
 
-  //human and robot attraction arrays
+  //reset attraction arrays
   this.attractRobots = [];
   this.attractHumans = [];
 
@@ -49,7 +56,7 @@ function MainMap(mainCanvas, tileSize, mapWidth, mapHeight) {
 
 
   this.drawBoard();
-}
+};
 
 /**
  * handle a game tick
