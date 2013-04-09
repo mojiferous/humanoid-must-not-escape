@@ -34,7 +34,8 @@ var activeTool = 0;
 var gameInPlay = false;
 var setupStep = 0;
 var gameType = 0;
-var unlimitedResources = true;
+var resourceType = 0;
+var timeType = 0;
 
 //generic global timeout variable
 var t;
@@ -80,14 +81,8 @@ var t;
       /**
        * click handlers for configuration controls
        */
-      $('#kill-humans').click(function() {
-        setNewGameType(1);
-      });
-      $('#kill-robots').click(function() {
-        setNewGameType(2);
-      });
-      $('#kill-all').click(function() {
-        setNewGameType(3);
+      $('span').click(function(e) {
+        handleSpanClick(e);
       });
 
 
@@ -100,43 +95,81 @@ var t;
 })(jQuery, this, this.document);
 
 /**
+ * all green screen navigation and option buttons are spans, handle clicks on them here
+ * @param obj
+ */
+function handleSpanClick(obj) {
+  switch (obj.currentTarget.id) {
+    case 'kill-humans':
+      setNewGameType(1);
+      break;
+
+    case 'kill-robots':
+      setNewGameType(2);
+      break;
+
+    case 'kill-all':
+      setNewGameType(3);
+      break;
+
+    case 'unlimited-resources':
+      setGameOption(1);
+      break;
+
+    case 'limited-resources':
+      setGameOption(2);
+      break;
+
+    case 'only-fire':
+      setGameOption(3);
+      break;
+
+    case 'only-water':
+      setGameOption(4);
+      break;
+
+    case 'unlimited-time':
+      setGameOption(5);
+      break;
+
+    case 'one-min-time':
+      setGameOption(6);
+      break;
+
+    case 'twenty-turns':
+      setGameOption(7);
+      break;
+
+    case 'start-game':
+      finishGameSetup();
+      break;
+  }
+
+}
+
+/**
  * keyboard handler when the game has not yet begun
  * @param keyCode
  */
 function handleNewGameKey(keyCode) {
-  switch (keyCode) {
-    case 49:
-      //the 1 key
-      if(setupStep == 0) {
-        setNewGameType(1);
-      } else {
-        if(!unlimitedResources) {
-          unlimitedResources = true;
-          $('#unlimited-resources').addClass('active');
-          $('#limited-resources').removeClass('active');
-        }
-      }
-      break;
+  var passedCode = 0;
+  if(keyCode > 48 && keyCode < 59) {
+    //set the code if a number was pressed
+    passedCode = keyCode - 48;
+  }
+  if(keyCode > 64 && keyCode < 90) {
+    //a letter was pressed, start the numbering at 10
+    passedCode = keyCode-63+9;
+  }
 
-    case 50:
-      //the 2 key
-      if(setupStep == 0) {
-        setNewGameType(2);
-      } else {
-        if(unlimitedResources) {
-          unlimitedResources = false;
-          $('#unlimited-resources').removeClass('active');
-          $('#limited-resources').addClass('active');
-        }
-      }
-      break;
-
-    case 51:
-      //the 3 key
-      if(setupStep == 0) {
-        setNewGameType(3);
-      }
-      break;
+  if(setupStep == 0) {
+    if(passedCode > 0 && passedCode < 4) {
+      setNewGameType(passedCode);
+    }
+  } else {
+    if (passedCode != 0) {
+      setGameOption(passedCode);
+    }
   }
 }
 
@@ -145,11 +178,92 @@ function handleNewGameKey(keyCode) {
  * @param newGameType
  */
 function setNewGameType(newGameType) {
-  if(gameType == 0) {
+  if(gameType == 0 && newGameType != 0) {
     gameType = newGameType;
     gCanvas.initGame();
     setupStep = 1;
+    resourceType = 1;
+    timeType = 1;
     $('#game-types').hide();
+  }
+}
+
+/**
+ * set game options from selections
+ * @param optionVal
+ */
+function setGameOption(optionVal) {
+  switch (optionVal) {
+    case 1:
+      if(resourceType != 1) {
+        resourceType = 1;
+        $('#unlimited-resources').addClass('active');
+        removeActiveClassFromArray(['#limited-resources', '#only-fire', '#only-water']);
+      }
+      break;
+
+    case 2:
+      if(resourceType != 2) {
+        resourceType = 2;
+        $('#limited-resources').addClass('active');
+        removeActiveClassFromArray(['#unlimited-resources', '#only-fire', '#only-water']);
+      }
+      break;
+
+    case 3:
+      if(resourceType != 3) {
+        resourceType = 3;
+        $('#only-fire').addClass('active');
+        removeActiveClassFromArray(['#unlimited-resources', '#limited-resources', '#only-water']);
+      }
+      break;
+
+    case 4:
+      if(resourceType != 4) {
+        resourceType = 4;
+        $('#only-water').addClass('active');
+        removeActiveClassFromArray(['#unlimited-resources', '#limited-resources', '#only-fire']);
+      }
+      break;
+
+    case 5:
+      if(timeType != 1) {
+        timeType = 1;
+        $('#unlimited-time').addClass('active');
+        removeActiveClassFromArray(['#one-min-time', '#twenty-turns']);
+      }
+      break;
+
+    case 6:
+      if(timeType != 2) {
+        timeType = 2;
+        $('#one-min-time').addClass('active');
+        removeActiveClassFromArray(['#unlimited-time', '#twenty-turns']);
+      }
+      break;
+
+    case 7:
+      if(timeType != 3) {
+        timeType = 3;
+        $('#twenty-turns').addClass('active');
+        removeActiveClassFromArray(['#unlimited-time', '#one-min-time']);
+      }
+      break;
+
+    case 11:
+    //'a' button:
+      finishGameSetup();
+      break;
+  }
+}
+
+/**
+ * removes the active class from every id or class passed
+ * @param vals
+ */
+function removeActiveClassFromArray(vals) {
+  for(var n=0; n<vals.length; n++) {
+    $(vals[n]).removeClass('active');
   }
 }
 
