@@ -21,7 +21,7 @@ var gTotalHeight = 18;
 //this determines the current human/robot animations, preventing the UI firing while moves are animated
 var numAnimations = 0;
 //this determines the current background y position of the scanline
-var scanTop = 0;
+var scanTop = [0, 500];
 
 //the following variables affect gameplay
 
@@ -60,13 +60,13 @@ var t;
       //handle clicks on the board
       $('#board-canvas').click(function(e) {
         if(numAnimations == 0 && gameInPlay) {
-          gCanvas.handleClick(e.offsetX, e.offsetY, activeTool);
+          gCanvas.handleClick((e.offsetX || e.clientX - $(e.target).offset().left), (e.offsetY || e.clientY - $(e.target).offset().top), activeTool);
         }
       });
       //handle clicks on the UI
       $('#ui-canvas').click(function(e) {
         if(gameInPlay) {
-          gUICanvas.handleClick(e.offsetX, (e.offsetY));
+          gUICanvas.handleClick((e.offsetX || e.clientX - $(e.target).offset().left), (e.offsetY || e.clientY - $(e.target).offset().top));
         }
       });
 
@@ -284,12 +284,21 @@ function handleTick() {
   }
 
   //move the crt scanline every tick
-  scanTop = scanTop-5;
+  $('.scan').each(function(index){
+    scanTop[index] = scanTop[index] - 5;
 
-  if(scanTop < -64) {
-    scanTop = 690;
-  }
-  $('#scan').css('background-position', '0px '+scanTop+'px');
+    if(scanTop[index] < -64) {
+      scanTop[index] = 640;
+    }
+
+    var backgroundPos = $(this).css('background-position').split(' ');
+    if(index == 0 && navigator.userAgent.toLowerCase().indexOf('firefox') > -1) {
+      //because firefox has issues with background-position compared to webkit, break the background position here, so the scan line looks alright.
+      backgroundPos[0] = '50px';
+    }
+    $(this).css('background-position', backgroundPos[0] + ' ' + scanTop[index]+'px');
+  });
+
   t = setTimeout('handleTick()', 50);
 }
 

@@ -6,7 +6,7 @@
  * 8/10/12
  * Mojiferous
  */
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/MAMP\/htdocs\/robotshumans\/sass\/main\.scss}line{font-family:\0000318}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/MAMP\/htdocs\/robotshumans\/sass\/main\.scss}line{font-family:\0000323}}
 body {
   margin: 0;
   font-size: 10px;
@@ -16,93 +16,109 @@ body {
   margin: 50px;
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/MAMP\/htdocs\/robotshumans\/sass\/main\.scss}line{font-family:\0000327}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/MAMP\/htdocs\/robotshumans\/sass\/main\.scss}line{font-family:\0000332}}
 canvas {
   margin: 0;
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/MAMP\/htdocs\/robotshumans\/sass\/main\.scss}line{font-family:\0000331}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/MAMP\/htdocs\/robotshumans\/sass\/main\.scss}line{font-family:\0000336}}
 a {
   padding: 8px;
   line-height: 40px;
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/MAMP\/htdocs\/robotshumans\/sass\/main\.scss}line{font-family:\0000336}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/MAMP\/htdocs\/robotshumans\/sass\/main\.scss}line{font-family:\0000341}}
 .board-body {
   position: absolute;
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/MAMP\/htdocs\/robotshumans\/sass\/main\.scss}line{font-family:\0000340}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/MAMP\/htdocs\/robotshumans\/sass\/main\.scss}line{font-family:\0000345}}
 #board-canvas {
   position: absolute;
   left: 0px;
   top: 0px;
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/MAMP\/htdocs\/robotshumans\/sass\/main\.scss}line{font-family:\0000344}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/MAMP\/htdocs\/robotshumans\/sass\/main\.scss}line{font-family:\0000349}}
 #ui-canvas {
   position: absolute;
   top: 576px;
   left: 0px;
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/MAMP\/htdocs\/robotshumans\/sass\/main\.scss}line{font-family:\0000350}}
-#control {
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/MAMP\/htdocs\/robotshumans\/sass\/main\.scss}line{font-family:\0000355}}
+#controls {
   pointer-events: none;
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/MAMP\/htdocs\/robotshumans\/sass\/main\.scss}line{font-family:\0000354}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/MAMP\/htdocs\/robotshumans\/sass\/main\.scss}line{font-family:\0000359}}
 .control-overlay {
   position: absolute;
   left: 50px;
   top: 50px;
   padding: 10px;
-  width: 100%;
-  height: 100%;
+  width: 576px;
+  height: 626px;
   background-color: #000;
   pointer-events: none;
   line-height: 40px;
 }
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/MAMP\/htdocs\/robotshumans\/sass\/main\.scss}line{font-family:\0000362}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/MAMP\/htdocs\/robotshumans\/sass\/main\.scss}line{font-family:\0000367}}
 .control-overlay a {
   pointer-events: all;
 }
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/MAMP\/htdocs\/robotshumans\/sass\/main\.scss}line{font-family:\0000365}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/MAMP\/htdocs\/robotshumans\/sass\/main\.scss}line{font-family:\0000370}}
 .control-overlay span {
   color: #306f14;
   padding-left: 10px;
   pointer-events: all;
 }
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/MAMP\/htdocs\/robotshumans\/sass\/main\.scss}line{font-family:\0000370}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/MAMP\/htdocs\/robotshumans\/sass\/main\.scss}line{font-family:\0000375}}
 .control-overlay .active {
   color: #59f216;
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/MAMP\/htdocs\/robotshumans\/sass\/main\.scss}line{font-family:\0000375}}
-#crt {
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/MAMP\/htdocs\/robotshumans\/sass\/main\.scss}line{font-family:\0000380}}
+.crt-screen {
   background-image: url(../images/crt2.png);
-  background-size: 576px 626px;
+  background-size: 576px 576px;
   opacity: .3;
-  position: absolute;
-  left: 50px;
-  top: 50px;
   display: block;
   width: 576px;
-  height: 626px;
+  height: 576px;
   overflow: hidden;
   pointer-events: none;
 }
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/MAMP\/htdocs\/robotshumans\/sass\/main\.scss}line{font-family:\0000385}}
-#crt #scan {
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/MAMP\/htdocs\/robotshumans\/sass\/main\.scss}line{font-family:\0000389}}
+.crt-screen .scan {
   position: relative;
   top: 0px;
   left: 0px;
   width: 576px;
-  height: 626px;
+  height: 576px;
   display: block;
   background-image: url(../images/scan.png);
   background-size: 576px 64px;
   background-position: 0px 0px;
   background-repeat: no-repeat;
   pointer-events: none;
+  background-attachment: fixed;
+}
+
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/MAMP\/htdocs\/robotshumans\/sass\/main\.scss}line{font-family:\00003105}}
+#crt1 {
+  position: absolute;
+  left: 50px;
+  top: 50px;
+}
+
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/MAMP\/htdocs\/robotshumans\/sass\/main\.scss}line{font-family:\00003109}}
+#crt2 {
+  position: absolute;
+  left: 676px;
+  top: 50px;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/MAMP\/htdocs\/robotshumans\/sass\/main\.scss}line{font-family:\00003111}}
+#crt2 .scan {
+  background-position: 676px 500px;
 }
