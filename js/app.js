@@ -185,6 +185,7 @@ function setNewGameType(newGameType) {
     resourceType = 1;
     timeType = 1;
     $('#game-types').hide();
+    $('#game-explanations').hide();
   }
 }
 
@@ -272,6 +273,7 @@ function removeActiveClassFromArray(vals) {
  */
 function finishGameSetup() {
   $('#controls').hide();
+  $('#resource-explanations').hide();
   gameInPlay = true;
 }
 

@@ -20,6 +20,29 @@ $screenSize: 576px;
 
 }
 
+@mixin overlay() {
+  padding: 10px;
+  width: $screenSize - 20;
+  height: $screenSize + 30px;
+  background-color: #000;
+  pointer-events: none;
+  line-height: 40px;
+  a {
+    pointer-events: all;
+  }
+  span {
+    color: #306f14;
+    pointer-events: all;
+  }
+  .active {
+    color: #59f216;
+  }
+}
+
+.hidden {
+  display: none;
+}
+
 body {
   margin: 0;
   font-size: 10px;
@@ -36,6 +59,14 @@ canvas {
 a {
   padding: 8px;
   line-height: 40px;
+  color: #59f216;
+}
+
+.small-text {
+  font-size: 8px;
+  a {
+    line-height: 2em;
+  }
 }
 
 .board-body {
@@ -52,28 +83,23 @@ a {
   left: 0px;
 }
 
-#controls {
+.screens {
   pointer-events: none;
 }
 
 .control-overlay {
   @include screen-pos(50px);
-  padding: 10px;
-  width: $screenSize;
-  height: $screenSize + 50px;
-  background-color: #000;
-  pointer-events: none;
-  line-height: 40px;
-  a {
-    pointer-events: all;
-  }
-  span {
-    color: #306f14;
-    padding-left: 10px;
-    pointer-events: all;
-  }
-  .active {
-    color: #59f216;
+  @include overlay();
+}
+
+.text-overlay {
+  @include screen-pos(676px, 50px);
+  @include overlay();
+}
+
+#help {
+  .text-overlay {
+    line-height: 2em;
   }
 }
 
@@ -111,4 +137,60 @@ a {
   .scan {
     background-position: 676px 500px;
   }
+}
+
+/**
+ * icons
+ */
+.icon {
+  background-image: url(../images/rhtileset.png);
+  background-repeat: no-repeat;
+  display: inline-block;
+  width: 32px;
+  height: 32px;
+}
+
+@mixin icon-pos($iconNum) {
+  background-position: (-$iconNum*32px) 0px;
+}
+
+#game-instructions {
+  pointer-events: none;
+  span, div {
+    pointer-events: none;
+  }
+}
+
+#human-icon {
+  @include icon-pos(1);
+}
+#robot-icon {
+  @include icon-pos(2);
+}
+#fire-icon {
+  @include icon-pos(3);
+}
+#water-icon {
+  @include icon-pos(4);
+}
+#hole-icon {
+  @include icon-pos(5);
+}
+#food-icon {
+  @include icon-pos(6);
+}
+#death-icon {
+  @include icon-pos(7);
+}
+#wall-icon {
+  @include icon-pos(8);
+}
+#money-icon {
+  @include icon-pos(9);
+}
+#electric-icon {
+  @include icon-pos(10);
+}
+#gears-icon {
+  @include icon-pos(11);
 }
