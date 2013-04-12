@@ -76,6 +76,12 @@ var t;
             }
             gUICanvas.renderUI();
           }
+
+          if(gameType == 3) {
+            //this is a "luck" game, select a new random resource
+            activeTool = Math.ceil(Math.random()*7);
+            gUICanvas.renderUI();
+          }
         }
       });
       //handle clicks on the UI
@@ -127,6 +133,7 @@ function handleSpanClick(obj) {
 
     case 'luck-game':
       setNewGameType(3);
+      activeTool = Math.ceil(Math.random()*7);
       break;
 
     case 'new-game':
