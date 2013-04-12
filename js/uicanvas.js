@@ -19,14 +19,13 @@ function UICanvas(uicanvas, mainFunction) {
   this.tileset = document.getElementById('tileset2');
 
   this.ticPart = 0;
-  this.fullTic = 0;
   this.ticFunction = mainFunction;
 
   this.renderUI();
 }
 
 /**
- * tick handler for the uicanvas class, also calls the graphics canvas tick handler
+ * tick handler for the uicanvas class
  */
 UICanvas.prototype.handleTick = function() {
   this.ticPart++;
@@ -82,14 +81,17 @@ UICanvas.prototype.renderUI = function() {
  * @param yLoc
  */
 UICanvas.prototype.handleClick = function(xLoc, yLoc) {
-  if(xLoc < 224) {
-    //this falls within the controls portion of the UI
+  if(xLoc < 224 && gameType != 3) {
+    //this falls within the resource controls portion of the UI and we're not on the "luck" game
 
     var newActive = Math.ceil(xLoc/32);
     if(newActive == activeTool) {
       //turn the tool off if clicked again
       activeTool = 0;
     } else {
+      if(gameType == 1 && resourceSupply[newActive-1] == 0) {
+        newActive = 0;
+      }
       activeTool = newActive;
     }
 
@@ -119,7 +121,12 @@ UICanvas.prototype.handleClick = function(xLoc, yLoc) {
 UICanvas.prototype.drawControlImage = function(toolNum, xLoc, yLoc) {
   if(toolNum < 8) {
     if(activeTool != toolNum) {
-      this.drawCanvas.globalAlpha = .5;
+      if(gameType == 1 && resourceSupply[toolNum-1] <= 0) {
+        //we're in a limited resource situation and this resource is out
+        this.drawCanvas.globalAlpha = .2;
+      } else {
+        this.drawCanvas.globalAlpha = .5;
+      }
     } else {
       this.drawCanvas.globalAlpha = .8;
     }
@@ -133,4 +140,11 @@ UICanvas.prototype.drawControlImage = function(toolNum, xLoc, yLoc) {
 
   this.drawCanvas.drawImage(this.tileset, xLoc, yLoc, 32, 32, ((toolNum - 1)*32), 0, 32, 32);
   this.drawCanvas.globalAlpha = 1;
+
+  if(toolNum < 8 && gameType == 1) {
+    //add the resource counts for the classic game
+    this.drawCanvas.font = "10px Press Start 2p";
+    this.drawCanvas.fillStyle = "white";
+    this.drawCanvas.fillText(resourceSupply[toolNum-1], ((toolNum - 1)*32), 32);
+  }
 };

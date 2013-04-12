@@ -1,4 +1,4 @@
-#Robots vs. Humans
+#The Humanoid Must Not Escape
 ***
 2013 Mojiferous Industries
 
@@ -9,9 +9,9 @@ Primary development by Mojiferous J. Colossus
 _See below for licensing and distribution information_
 ***
 ###About
-Robots vs. Humans is a browser game built entirely in Javascript and open-sourced under CC Attribution 3.0. That means you can take it, disassemble it, rebuild your own version, laugh at my terrible coding, and do with it as you will. As long as you mention somewhere that it is based on my half-assed work. You can even credit my pseudonym.
+The Humanoid Must Not Escape is a browser game built entirely in Javascript and open-sourced under CC Attribution 3.0. That means you can take it, disassemble it, rebuild your own version, laugh at my terrible coding, and do with it as you will. As long as you mention somewhere that it is based on my half-assed work. You can even credit my pseudonym.
 
-Source code available at http://github.com/mojiferous/robots-and-humans-js
+Source code available at http://github.com/mojiferous/humanoid-must-not-escape
 
 ###Instructions
 Complete instructions and help are available in the game. If that is too complicated or confusing, you should consider wearing a helmet for safety when walking. If you really want instructions in this readme, you should consider contributing to the repo, because ain't nobody got time for that here.

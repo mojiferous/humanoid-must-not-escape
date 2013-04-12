@@ -623,7 +623,63 @@ MainMap.prototype.handleClick = function(rawX, rawY, value) {
   }
 
 
+  this.checkForEndGame();
+
   this.redrawTile(locX, locY);
+};
+
+/**
+ * checks for the end of the game conditions
+ */
+MainMap.prototype.checkForEndGame = function() {
+  var gameOver = false;
+  var hasWon = false;
+
+  if(gameType == 1) {
+    //this is a "classic" game with limited resources
+    var resCount = 0;
+    for(var n=0; n<resourceSupply.length; n++) {
+      if(resourceSupply[n] > 0) {
+        resCount++;
+      }
+    }
+
+    if(resCount == 0) {
+      //we're at a zero count on all the resources
+      gameOver = true;
+    }
+  }
+
+  if(gameType == 2) {
+    //this is an "arcade" game with limited number of turns
+    if
+      (currentTurn >= 20) {
+      gameOver = true;
+    }
+  }
+
+  if(this.robots.length == 0) {
+    //there are no robots left
+    gameOver = true;
+  }
+  if(this.humans.length == 0) {
+    //there are no humans left
+    gameOver = true;
+    hasWon = true;
+  }
+
+  if(gameOver) {
+    //yes, the game is over
+    gameInPlay = false;
+    $('#game-types').hide();
+    $('#game-over').show();
+    var winGame = $('#win-game');
+    (hasWon) ? $(winGame).show() : $(winGame).hide();
+
+    //show the controls overlay
+    $('#controls').show();
+  }
+
 };
 
 /**
@@ -839,6 +895,8 @@ MainMap.prototype.checkForRobotDeath = function(x, y) {
     }
   }
 
+  this.checkForEndGame();
+
   return isDead;
 
 };
@@ -891,6 +949,8 @@ MainMap.prototype.checkForHumanDeath = function(x, y) {
 
     }
   }
+
+  this.checkForEndGame();
 
   return isDead;
 };

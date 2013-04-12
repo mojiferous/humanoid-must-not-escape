@@ -47,7 +47,7 @@ Human.prototype.handleMove = function() {
   handleMoveVars(this, newVal);
 
   //by setting the overlay to -2000, we prevent other robots or humans from moving into our target square
-  this.mainMap.overlay[this.xLoc][this.yLoc] = -2000;
+  this.mainMap.overlay[this.xLoc][this.yLoc] = this.mainMap.overlay[this.xLoc][this.yLoc] - 2000;
   if(this.xMove == 0 && this.yMove == 0){
     //we're not moving anywhere, just set the tile -- animations run using a full refresh of the screen and then incremental drawing of human/robot movement
     this.finalizeMove();
@@ -85,6 +85,7 @@ Human.prototype.handleAnimation = function(newMap) {
  * finalize human movement, setting the overlay tile and redrawing it, done here since the movement animation uses a full redraw before each tick
  */
 Human.prototype.finalizeMove = function() {
+  this.mainMap.overlay[this.xLoc][this.yLoc] = this.mainMap.overlay[this.xLoc][this.yLoc] + 2000;
   if(!this.mainMap.checkForHumanDeath(this.xLoc, this.yLoc)) {
     //yay! I'm still alive
     this.mainMap.overlay[this.xLoc][this.yLoc] = 50;

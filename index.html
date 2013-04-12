@@ -19,23 +19,16 @@
     <canvas id="ui-canvas" width="576" height="50"></canvas>
   </div>
   <div id="controls" class="screens">
-    <div class="control-overlay" id="game-options">
-      RESOURCES<br/>
-      <span class="active" id="unlimited-resources">1. Unlimited</span><br/>
-      <span id="limited-resources">2. Limited</span><br/>
-      <span id="only-fire">3. Only Fire</span><br/>
-      <span id="only-water">4. Only Water</span><br/>
-      TIME<br/>
-      <span class="active" id="unlimited-time">5. Unlimited</span><br/>
-      <span id="one-min-time">6. One Minute</span><br/>
-      <span id="twenty-turns">7. Twenty Turns</span><br/><br/>
-      a. <span id="start-game" class="active">START GAME</span>
+    <div class="control-overlay hidden" id="game-over">
+      GAME HAS CEASED.<br/><br/>
+      <span id="win-game">CONGRATULATIONS PLAYER, YOU HAVE SATISFIED A WIN STATE.</span><br/><br/><br/>
+      <span class="active" id="new-game">NEW GAME</span>
     </div>
     <div class="control-overlay" id="game-types">
       SELECT A GAME TYPE<br/>
-      1. <span id="kill-humans" class="active">KILL ALL HUMANS * SAVE ROBOTS</span><br/>
-      2. <span id="kill-robots" class="active">Kill all Robots, save the Humans</span><br/>
-      3. <span id="kill-all" class="active">Kill Them All</span><br/>
+      1. <span id="classic-game" class="active">CLASSIC</span><br/>
+      2. <span id="arcade-game" class="active">ARCADE</span><br/>
+      3. <span id="luck-game" class="active">LUCK</span><br/>
     </div>
   </div>
 
@@ -43,47 +36,45 @@
 
     <div class="text-overlay" id="game-instructions">
       <span class="small-text">
-        <div class="icon" id="human-icon"></div>This is a human. <div class="icon" id="robot-icon"></div>This is a robot.
-        <div class="icon" id="hole-icon"></div>This is a hole. It will kill humans and robots<br/><br/>
+        <div class="icon" id="human-icon"></div>This is human. <div class="icon" id="robot-icon"></div>This is robot.
+        <div class="icon" id="hole-icon"></div>This is hole. It will kill humanoids and robots<br/><br/>
 
-        <div class="icon" id="fire-icon"></div>This is fire. It repels and kills humans and robots<br/>
-        <div class="icon" id="water-icon"></div>This is water. It attracts humans and repels/kills robots<br/>
-        <div class="icon" id="food-icon"></div>This is food. It attracts humans<br/>
-        <div class="icon" id="wall-icon"></div>This is a wall. Nothing can cross it<br/>
-        <div class="icon" id="money-icon"></div>This is money. It attracts everyone.<br/>
-        <div class="icon" id="electric-icon"></div>This is electricity. It attracts robots and repels/kills humans<br/>
-        <div class="icon" id="gears-icon"></div>These are gears. They attract robots<br/><br/>
-        The two icons in the lower right (the human and the robot) will display heat maps, allowing you to see how attractive a tile is to a human or a robot. Green is attractive, red is repellant.<br/><br/>
+        <div class="icon" id="fire-icon"></div>This is fire. It repels/kills humanoids and robots<br/>
+        <div class="icon" id="water-icon"></div>This is water. It attracts humanoids and repels/kills robots<br/>
+        <div class="icon" id="food-icon"></div>This is food. It attracts humanoids<br/>
+        <div class="icon" id="wall-icon"></div>This is wall. Nothing can cross it<br/>
+        <div class="icon" id="money-icon"></div>This is money. It attracts all.<br/>
+        <div class="icon" id="electric-icon"></div>This is electricity. It attracts robots and repels/kills humanoids<br/>
+        <div class="icon" id="gears-icon"></div>This is gears. It attracts robots<br/><br/>
+        Use of the two icons in the lower right (the humanoid and the robot) will display heat maps, allowing tile attractiveness measurement for humanoids or robots. Green is attractive, red is repellant.<br/><br/>
       </span>
       TO PLAY:
-      <span class="small-text">
-        Click on the icon for a resource (if available) and then click on the map. Humans and robots will move automatically in reaction. Lather, rinse, repeat.
+      <span class="small-text hidden" id="play-classic">
+        Click on the icon for a resource showing availability count of greater than 0. Click on the map to place resource. Humanoids and robots will move automatically in reaction. Lather, rinse, repeat.
       </span>
-    </div>
-
-    <div class="text-overlay" id="resource-explanations">
-      RESOURCES<br/>
-      <span class="small-text">
-        This is all fairly self-explanitory, right? Unlimited means you have endless resource tiles to put down, limited puts a maximum limit on that number. Only fire and only water should only confuse visitors from alternate dimensions.<br/><br/>
+      <span class="small-text hidden" id="play-arcade">
+        Click on the icon for a resource. Click on the map to place resource. Humanoids and robots will move automatically in reaction. Turn remaining displayed in bottom right.
       </span>
-      TIME<br/>
-      <span class="small-text">
-        This is the amount of time you have to play this game. It is not absolute, because once your game is over you can start a new one. A turn is you (the player) placing a tile on the board. If this is your first time playing, all of this will make much more sense once you start the game (if you haven't figured out how to do that, wipe the drool off your chin and read this line: Hit the 'a' key on your keyboard OR click on the text that says "START GAME" to the left<-. I have the feeling that you're still confused.
+      <span class="small-text hidden" id="play-luck">
+        The icon for resource granted by computer will highlight. Click on the map to place resource. Humanoids and robots will move automatically in reaction. Resource must be placed.
       </span>
     </div>
 
     <div class="text-overlay" id="game-explanations">
-      Welcome to Robots Vs. Humans<br/>
+      THE HUMANOID MUST NOT ESCAPE<br/>
       <span class="small-text">
         v1.0 2013 Mojiferous Industries<br/>
         This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/us/" target="_blank">Creative Commons Attribution 3.0 United States License</a><br/>
       </span><br/>
-      Game Types<br/>
       <span class="small-text">
-        <span class="active">KILL ALL HUMANS * SAVE ROBOTS:</span> In this game type, you are attempting to kill the humans and save the robots. Confused about who is human and who is robots? There is explanitory text in the game screen. If you've looked at the help text and are still confused than maybe video games are not your strong suit.<br/><br/>
-        <span class="active">Kill all Robots, save the Humans:</span> The opposite of the previous game, at least in terms of whom you are killing. The robots and humans still look the same. <br/><br/>
-        <span class="active">Kill Them All:</span> Somewhere there is a guy in a Camaro giving the devil horns at the mere mention of this name. It has nothing to do with a certain money-making venture that enjoys their copyrights more than not being jerks. Instead you have to get rid of everyone on the board. Take no prisoners, etc. etc.<br/><br/><br/>
-        Source code available on <a href="http://github.com/mojiferous/robots-and-humans-js" target="_blank">Github</a>
+        <span class="active">KILL ALL HUMANS * SAVE ROBOTS</span> You have been tasked with preserving the function of a small group of friendly robotic entities. Within your tactical range there are also a certain number of humanoids that threaten the safety of the friendly robots. Destroy the humanoids using whatever method you can, and preserve the function of the robots.<br/><br/>
+      </span>
+      GAME TYPES<br/>
+      <span class="small-text">
+        <span class="active">CLASSIC</span> You have limited resources and unlimited time to accomplish your task.<br/><br/>
+        <span class="active">ARCADE</span> Unlimited resources are at your disposal, but you must eliminate the humanoids in less than 20 turns<br/><br/>
+        <span class="active">LUCK</span> You may have unlimited time, but you may only place the resource you receive from the computer<br/><br/><br/>
+        Source code available on <a href="http://github.com/mojiferous/humanoid-must-not-escape" target="_blank">Github</a>
       </span>
     </div>
 
