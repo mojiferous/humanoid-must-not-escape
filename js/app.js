@@ -67,21 +67,27 @@ var t;
           //handle the turn
           gCanvas.handleClick((e.offsetX || e.clientX - $(e.target).offset().left), (e.offsetY || e.clientY - $(e.target).offset().top), activeTool);
 
-          if(gameType == 1) {
-            //this is a limited resource game, reduce the resource supply
-            resourceSupply[activeTool-1]--;
-            if(resourceSupply[activeTool-1] == 0) {
-              //deactivate this tool if we reach the end
-              activeTool = 0;
-            }
-            gUICanvas.renderUI();
+          switch (gameType) {
+            case 1:
+              //this is a limited resource game, reduce the resource supply
+              resourceSupply[activeTool-1]--;
+              if(resourceSupply[activeTool-1] == 0) {
+                //deactivate this tool if we reach the end
+                activeTool = 0;
+              }
+              break;
+
+            case 2:
+              break;
+
+            case 3:
+              //this is a "luck" game, select a new random resource
+              activeTool = Math.ceil(Math.random()*7);
+              break;
           }
 
-          if(gameType == 3) {
-            //this is a "luck" game, select a new random resource
-            activeTool = Math.ceil(Math.random()*7);
-            gUICanvas.renderUI();
-          }
+          gUICanvas.renderUI();
+
         }
       });
       //handle clicks on the UI

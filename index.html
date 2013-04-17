@@ -16,7 +16,7 @@
 <body>
   <div class="board-body">
     <canvas id="board-canvas" width="576" height="576"></canvas>
-    <canvas id="ui-canvas" width="576" height="50"></canvas>
+    <canvas id="ui-canvas" width="1000" height="105"></canvas>
   </div>
   <div id="controls" class="screens">
     <div class="control-overlay hidden" id="game-over">
@@ -28,6 +28,7 @@
       SELECT A GAME TYPE<br/>
       1. <span id="classic-game" class="active">CLASSIC</span><br/>
       2. <span id="arcade-game" class="active">ARCADE</span><br/>
+      &nbsp;&nbsp;a. <span id="arcade-one-hole" class="active">ONE HOLE CHALLENGE</span><br/>
       3. <span id="luck-game" class="active">LUCK</span><br/>
     </div>
   </div>
@@ -94,8 +95,7 @@
   <div class="hidden">
     <img src="images/rhtileset.png" id="tileset2" />
     <img src="images/button_tileset.png" id="tileset1" />
-    <img src="images/button_on_white.png" id="button-on" />
-    <img src="images/button_off_white.png" id="button-off" />
+    <img src="images/buttons.png" id="button-images" />
   </div>
 </body>
 </html>
