@@ -274,7 +274,7 @@ MainMap.prototype.checkForMovementObstacles = function(x, y) {
       if(this.overlay[x][y] > 0 && this.overlay[x][y] < 100) {
         //this is a human or robot
         return false;
-      } else if(this.overlay[x][y] <= -2000) {
+      } else if(this.overlay[x][y] <= -1000) {
         //this is a temporary marker so multiple humans or robots don't move to the same square
         return false;
       }
@@ -652,8 +652,7 @@ MainMap.prototype.checkForEndGame = function() {
 
   if(gameType == 2) {
     //this is an "arcade" game with limited number of turns
-    if
-      (currentTurn >= 20) {
+    if (currentTurn >= 20) {
       gameOver = true;
     }
   }

@@ -16,7 +16,7 @@ function UICanvas(uicanvas, mainFunction) {
   this.drawCanvas = uicanvas.getContext('2d');
 
   //grab our tileset
-  this.tileset = document.getElementById('tileset2');
+  this.tileset = document.getElementById('tileset1');
 
   this.ticPart = 0;
   this.ticFunction = mainFunction;
@@ -81,10 +81,10 @@ UICanvas.prototype.renderUI = function() {
  * @param yLoc
  */
 UICanvas.prototype.handleClick = function(xLoc, yLoc) {
-  if(xLoc < 224 && gameType != 3) {
+  if(xLoc < 400 && gameType != 3) {
     //this falls within the resource controls portion of the UI and we're not on the "luck" game
 
-    var newActive = Math.ceil(xLoc/32);
+    var newActive = Math.ceil(xLoc/50);
     if(newActive == activeTool) {
       //turn the tool off if clicked again
       activeTool = 0;
@@ -95,13 +95,13 @@ UICanvas.prototype.handleClick = function(xLoc, yLoc) {
       activeTool = newActive;
     }
 
-  } else if(xLoc > 256 && xLoc < 288) {
+  } else if(xLoc > 400 && xLoc < 450) {
     //this is the human overlay
     showHumanHeatMap = !showHumanHeatMap;
     showRobotHeatMap = false;
     redrawBoard();
 
-  } else if(xLoc > 288 && xLoc < 320) {
+  } else if(xLoc > 450 && xLoc < 500) {
     //and this would be the robot overlay
     showRobotHeatMap = !showRobotHeatMap;
     showHumanHeatMap = false;
@@ -123,28 +123,33 @@ UICanvas.prototype.drawControlImage = function(toolNum, xLoc, yLoc) {
     if(activeTool != toolNum) {
       if(gameType == 1 && resourceSupply[toolNum-1] <= 0) {
         //we're in a limited resource situation and this resource is out
-        this.drawCanvas.globalAlpha = .2;
+        this.drawCanvas.globalAlpha = .0;
       } else {
-        this.drawCanvas.globalAlpha = .5;
+        this.drawCanvas.drawImage(document.getElementById('button-off'),((toolNum-1)*50), 0);
+        this.drawCanvas.globalAlpha = .3;
       }
     } else {
+      this.drawCanvas.drawImage(document.getElementById('button-on'),((toolNum-1)*50), 0);
       this.drawCanvas.globalAlpha = .8;
     }
   } else if(toolNum == 9 && showHumanHeatMap) {
+    this.drawCanvas.drawImage(document.getElementById('button-on'),((toolNum-1)*50), 0);
     this.drawCanvas.globalAlpha = .8;
   } else if(toolNum == 10 && showRobotHeatMap) {
+    this.drawCanvas.drawImage(document.getElementById('button-on'),((toolNum-1)*50), 0);
     this.drawCanvas.globalAlpha = .8;
   } else {
-    this.drawCanvas.globalAlpha = .5;
+    this.drawCanvas.drawImage(document.getElementById('button-off'),((toolNum-1)*50), 0);
+    this.drawCanvas.globalAlpha = .3;
   }
 
-  this.drawCanvas.drawImage(this.tileset, xLoc, yLoc, 32, 32, ((toolNum - 1)*32), 0, 32, 32);
+  this.drawCanvas.drawImage(this.tileset, xLoc, yLoc, 32, 32, ((toolNum - 1)*50)+9, 9, 32, 32);
   this.drawCanvas.globalAlpha = 1;
 
   if(toolNum < 8 && gameType == 1) {
     //add the resource counts for the classic game
     this.drawCanvas.font = "10px Press Start 2p";
-    this.drawCanvas.fillStyle = "white";
-    this.drawCanvas.fillText(resourceSupply[toolNum-1], ((toolNum - 1)*32), 32);
+    this.drawCanvas.fillStyle = "black";
+    this.drawCanvas.fillText(resourceSupply[toolNum-1], ((toolNum - 1)*50)+9, 41);
   }
 };

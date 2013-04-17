@@ -97,7 +97,7 @@ a {
 
 #ui-canvas {
   position: absolute;
-  top: $screenSize;
+  top: $screenSize + 50px;
   left: 0px;
 }
 
@@ -145,6 +145,23 @@ a {
     pointer-events: none;
     background-attachment: fixed;
   }
+}
+
+.crt-outer {
+  background-image: url(../images/crtouter.png);
+  width: 629px;
+  height: 641px;
+  display: block;
+  pointer-events: none;
+  opacity: .4;
+}
+
+#crt-outer1 {
+  @include screen-pos(25px, 18px);
+}
+
+#crt-outer2 {
+  @include screen-pos(651px, 18px);
 }
 
 #crt1 {

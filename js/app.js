@@ -132,8 +132,8 @@ function handleSpanClick(obj) {
       break;
 
     case 'luck-game':
-      setNewGameType(3);
       activeTool = Math.ceil(Math.random()*7);
+      setNewGameType(3);
       break;
 
     case 'new-game':
