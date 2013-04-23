@@ -688,10 +688,48 @@ MainMap.prototype.checkForEndGame = function() {
       $('#next-level').hide();
     }
 
+    $('#achievements').html(this.checkAchievements(hasWon));
+
+    this.addToStats(hasWon);
+
     //show the controls overlay
     $('#controls').show();
   }
 
+};
+
+/**
+ * add to the player's stats, stored in localStorage
+ * @param hasWon
+ */
+MainMap.prototype.addToStats = function(hasWon) {
+  storeValue(kTOTAL_GAMES, parseInt(retreiveValue(kTOTAL_GAMES, 0))+1);
+  if(hasWon) {
+    storeValue(kTOTAL_WINS, parseInt(retreiveValue(kTOTAL_WINS, 0))+1);
+  }
+  storeValue(kTOTAL_TURNS, parseInt(retreiveValue(kTOTAL_TURNS, 0))+currentTurn);
+  storeValue(kHUMANS_KILLED, parseInt(retreiveValue(kHUMANS_KILLED, 0)) + (numHumans - this.humans.length));
+  storeValue(kROBOTS_KILLED, parseInt(retreiveValue(kROBOTS_KILLED, 0)) + (numRobots - this.robots.length));
+
+  if(currentLevel > parseInt(retreiveValue(kMAX_LEVEL, 0))) {
+    storeValue(kMAX_LEVEL, currentLevel);
+  }
+};
+
+MainMap.prototype.checkAchievements = function(hasWon) {
+  var retVal = '';
+  if(this.robots.length == 0 && this.humans.length == 0 && !hasAchievement(kaKILL_ALL)) {
+    //the player just got the "kill them all"
+    getAchievement(kaKILL_ALL);
+    retVal+='You got the KILL THEM ALL achievement<br/>';
+  }
+
+  if(hasWon && this.robots.length == numRobots && !hasAchievement(kaCLEAN_WIN)) {
+    getAchievement(kaCLEAN_WIN);
+    retVal+='You got the CLEAN WIN achievement<br/>';
+  }
+
+  return retVal;
 };
 
 /**

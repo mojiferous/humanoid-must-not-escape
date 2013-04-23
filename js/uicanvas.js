@@ -83,6 +83,8 @@ UICanvas.prototype.renderUI = function() {
   //add the level counter
   this.drawStatusImage('yellow', 650, 0, gameInPlay, 'level', currentLevel);
 
+  this.drawStatusImage('red', 0, 50, hasAchievement(kaKILL_ALL), 'kill em', 'ALL');
+  this.drawStatusImage('green', 50, 50, hasAchievement(kaCLEAN_WIN), 'clean', 'WIN');
 };
 
 /**
@@ -185,17 +187,33 @@ UICanvas.prototype.drawStatusImage = function(buttonType, xLoc, yLoc, isOn, firs
     this.drawCanvas.globalAlpha = .8;
   }
 
-  this.drawCanvas.font = "10px 'Press Start 2p'";
-  var leftVal = this.drawCanvas.measureText(firstLine).width;
+  var leftVal = this.setMeasuredFontSize(firstLine, 9);
   leftVal = (50 - leftVal)/2;
   this.drawCanvas.fillText(firstLine, xLoc+leftVal, yLoc+18);
 
-  this.drawCanvas.font = "14px 'Press Start 2p'";
-  leftVal = this.drawCanvas.measureText(secondLine).width;
+  leftVal = this.setMeasuredFontSize(secondLine, 14);
   leftVal = (50 - leftVal)/2;
   this.drawCanvas.fillText(secondLine, xLoc+leftVal, yLoc+38);
 
   this.drawCanvas.globalAlpha = 1;
+};
+
+/**
+ * set the font size for the status button text
+ * @param textVal
+ * @param startSize
+ * @returns {Number}
+ */
+UICanvas.prototype.setMeasuredFontSize = function(textVal, startSize) {
+  this.drawCanvas.font = startSize+"px 'Press Start 2p'";
+  var widthVal = this.drawCanvas.measureText(textVal).width;
+
+  if(widthVal > 44 && startSize > 1) {
+    //set this value to a decent looking width in a 50px button
+    widthVal = this.setMeasuredFontSize(textVal, startSize-1);
+  }
+
+  return widthVal;
 };
 
 /**

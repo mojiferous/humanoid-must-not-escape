@@ -37,6 +37,7 @@ var resourceSupply = [];
 var currentTurn = 0;
 var currentLevel = 0;
 
+//number of humans and robots in the level
 var numHumans = 4;
 var numRobots = 4;
 
@@ -159,8 +160,47 @@ function handleSpanClick(obj) {
     case 'next-level':
       startNewLevel();
       break;
+
+    case 'statistics':
+      processStatistics();
+      $('#game-stats').show();
+      break;
+
+    case 'close-stats':
+      $('#game-stats').hide();
+      break;
   }
 
+}
+
+/**
+ * retrieve statistics from the local storage and set the stats spans to the results
+ */
+function processStatistics() {
+  var totalGames = retreiveValue(kTOTAL_GAMES, 0);
+  $('#total-games-span').html(totalGames);
+
+  var totalTurns = retreiveValue(kTOTAL_TURNS, 0);
+  $('#total-turns-span').html(totalTurns);
+  $('#total-humans-killed-span').html(retreiveValue(kHUMANS_KILLED, 0));
+  $('#total-robots-killed-span').html(retreiveValue(kROBOTS_KILLED, 0));
+
+  var totalWins = retreiveValue(kTOTAL_WINS, 0);
+  $('#total-wins-span').html(totalWins);
+
+  var winPerc = 0;
+  if(totalGames > 0 && totalWins > 0) {
+    winPerc = (totalWins/totalGames)*100;
+  }
+  $('#total-win-percentage-span').html(winPerc+'%');
+
+  var gameLength = 0;
+  if(totalGames > 0 && totalTurns > 0) {
+    gameLength = totalTurns/totalGames;
+  }
+  $('#total-avg-game-length-span').html(gameLength + ' turns');
+
+  $('#total-max-level').html(retreiveValue(kMAX_LEVEL, 0));
 }
 
 /**

@@ -3,6 +3,17 @@
  * 4/3/13 Mojiferous
  */
 
+//constants
+var kTOTAL_GAMES = 'totalGames';
+var kTOTAL_TURNS = 'totalTurns';
+var kHUMANS_KILLED = 'totalHumans';
+var kROBOTS_KILLED = 'totalRobots';
+var kTOTAL_WINS = 'totalWins';
+var kMAX_LEVEL = 'maxLevel';
+
+var kaKILL_ALL = 'killAll';
+var kaCLEAN_WIN = 'cleanWin';
+
 /**
  * handle the various variables associated with an object movement
  * @param obj
@@ -152,15 +163,42 @@ function storeValue(key, val) {
 /**
  * returns a value from the local storage database
  * @param key
+ * @param defaultValue
  * @returns {string}
  */
-function retreiveValue(key) {
-  var retVal = '';
+function retreiveValue(key, defaultValue) {
+  var retVal = defaultValue;
 
   if(typeof(Storage) !== 'undefinded') {
     //make sure we can access local storage
     retVal = localStorage.getItem(key);
+
+    if(retVal == null) {
+      retVal = defaultValue;
+    }
   }
 
   return retVal;
+}
+
+/**
+ * check the local storage to see if the player has the achievement
+ * @param achName
+ * @returns {boolean}
+ */
+function hasAchievement(achName) {
+  var hasAch = false;
+  if(retreiveValue(achName, 'false') != 'false') {
+    hasAch = true;
+  }
+
+  return hasAch;
+}
+
+/**
+ * set the achievement to true
+ * @param achName
+ */
+function getAchievement(achName) {
+  storeValue(achName, 'true');
 }

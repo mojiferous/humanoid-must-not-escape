@@ -21,7 +21,9 @@
   <div id="controls" class="screens">
     <div class="control-overlay hidden" id="game-over">
       GAME HAS CEASED.<br/><br/>
-      <span id="win-game">CONGRATULATIONS PLAYER, YOU HAVE SATISFIED A WIN STATE.</span><br/><br/><br/>
+      <span id="win-game">CONGRATULATIONS PLAYER, YOU HAVE SATISFIED A WIN STATE.</span><br/>
+      <span id="achievements"></span><br/>
+      <br/><br/>
       <span class="active hidden" id="new-game">NEW GAME</span>
       <span class="active hidden" id="next-level">NEXT LEVEL</span>
     </div>
@@ -30,7 +32,9 @@
       1. <span id="classic-game" class="active">CLASSIC</span><br/>
       2. <span id="arcade-game" class="active">ARCADE</span><br/>
       &nbsp;&nbsp;a. <span id="arcade-one-hole" class="active">ONE HOLE CHALLENGE</span><br/>
-      3. <span id="luck-game" class="active">LUCK</span><br/>
+      3. <span id="luck-game" class="active">LUCK</span><br/><br/>
+      OTHER<br/>
+      4. <span id="statistics" class="active">GAME STATISTICS</span>
     </div>
   </div>
 
@@ -62,6 +66,7 @@
       </span>
     </div>
 
+
     <div class="text-overlay" id="game-explanations">
       THE HUMANOID MUST NOT ESCAPE<br/>
       <span class="small-text">
@@ -78,6 +83,21 @@
         <span class="active">LUCK</span> You may have unlimited time, but you may only place the resource you receive from the computer<br/><br/><br/>
         Source code available on <a href="http://github.com/mojiferous/humanoid-must-not-escape" target="_blank">Github</a>
       </span>
+    </div>
+
+    <div class="text-overlay hidden" id="game-stats">
+      <span class="small-text">
+        <span class="active">TOTAL GAMES: </span><span id="total-games-span"></span><br/>
+        <span class="active">TOTAL TURNS: </span><span id="total-turns-span"></span><br/>
+        <span class="active">HUMANS KILLED: </span><span id="total-humans-killed-span"></span><br/>
+        <span class="active">ROBOTS KILLED: </span><span id="total-robots-killed-span"></span><br/>
+        <span class="active">TOTAL WINS: </span><span id="total-wins-span"></span><br/><br/>
+        <span class="active">WIN %: </span><span id="total-win-percentage-span"></span><br/>
+        <span class="active">AVERAGE GAME LENGTH: </span><span id="total-avg-game-length-span"></span><br/>
+        <span class="active">MAX LEVEL: </span><span id="total-max-level"></span><br/>
+        <br/><br/>
+      </span>
+      <span class="active" id="close-stats">CLOSE</span>
     </div>
 
   </div>
