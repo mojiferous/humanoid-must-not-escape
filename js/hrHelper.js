@@ -135,3 +135,32 @@ function returnBestMove(obj, x, y, zeroVal) {
 
   return bestLocation;
 }
+
+/**
+ * store a value into the local storage database
+ * used for achievements
+ * @param key
+ * @param val
+ */
+function storeValue(key, val) {
+  if(typeof(Storage) !== 'undefined') {
+    //make sure we can access local storage first
+    localStorage.setItem(key, val);
+  }
+}
+
+/**
+ * returns a value from the local storage database
+ * @param key
+ * @returns {string}
+ */
+function retreiveValue(key) {
+  var retVal = '';
+
+  if(typeof(Storage) !== 'undefinded') {
+    //make sure we can access local storage
+    retVal = localStorage.getItem(key);
+  }
+
+  return retVal;
+}

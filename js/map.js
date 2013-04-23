@@ -49,8 +49,10 @@ MainMap.prototype.initGame = function() {
   //initialize the board, including the overlay, all placement of blocks and characters must occur after this call
   this.initBoard();
 
-  for(var n=0; n<4; n++) {
+  for(var n=0; n<numRobots; n++) {
     this.addRobot();
+  }
+  for(n=0; n<numHumans; n++) {
     this.addHuman();
   }
 
@@ -129,6 +131,10 @@ MainMap.prototype.initBoard = function() {
  */
 MainMap.prototype.initHoles = function() {
   var numHoles = Math.round(Math.random()*12)+1;
+  if (gameType == 10) {
+    numHoles = 1;
+    gameType = 2;
+  }
 
   for(var n=0; n<numHoles; n++) {
     //add holes to the map, but not on the leading edges where robots and human will be
@@ -672,8 +678,15 @@ MainMap.prototype.checkForEndGame = function() {
     gameInPlay = false;
     $('#game-types').hide();
     $('#game-over').show();
-    var winGame = $('#win-game');
-    (hasWon) ? $(winGame).show() : $(winGame).hide();
+    if(hasWon) {
+      $('#win-game').show();
+      $('#new-game').hide();
+      $('#next-level').show();
+    } else {
+      $('#win-game').hide();
+      $('#new-game').show();
+      $('#next-level').hide();
+    }
 
     //show the controls overlay
     $('#controls').show();

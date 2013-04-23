@@ -74,10 +74,14 @@ UICanvas.prototype.renderUI = function() {
   //draw the robotOverlay control
   this.drawControlImage(10, 64, 0);
 
+  var turnOn = false;
   if(gameType == 2) {
-    //add the game turn limit counter
-    this.drawStatusImage('yellow', 600, 0, true, 'turn', currentTurn);
+    turnOn = true;
   }
+  //add the game turn counter
+  this.drawStatusImage('yellow', 600, 0, turnOn, 'turn', currentTurn);
+  //add the level counter
+  this.drawStatusImage('yellow', 650, 0, gameInPlay, 'level', currentLevel);
 
 };
 
@@ -174,23 +178,22 @@ UICanvas.prototype.drawControlImage = function(toolNum, xLoc, yLoc) {
  */
 UICanvas.prototype.drawStatusImage = function(buttonType, xLoc, yLoc, isOn, firstLine, secondLine) {
   this.drawButtonImage(buttonType, xLoc, yLoc, isOn);
+  this.drawCanvas.fillStyle = "#000000";
   if(!isOn) {
-    this.drawCanvas.fillStyle = "#333333";
-    this.drawCanvas.globalAlpha = .2;
+    this.drawCanvas.globalAlpha = .4;
   } else {
-    this.drawCanvas.fillStyle = "#000000";
     this.drawCanvas.globalAlpha = .8;
   }
 
   this.drawCanvas.font = "10px 'Press Start 2p'";
   var leftVal = this.drawCanvas.measureText(firstLine).width;
   leftVal = (50 - leftVal)/2;
-  this.drawCanvas.fillText(firstLine, xLoc+leftVal, yLoc+15);
+  this.drawCanvas.fillText(firstLine, xLoc+leftVal, yLoc+18);
 
   this.drawCanvas.font = "14px 'Press Start 2p'";
   leftVal = this.drawCanvas.measureText(secondLine).width;
   leftVal = (50 - leftVal)/2;
-  this.drawCanvas.fillText(secondLine, xLoc+leftVal, yLoc+35);
+  this.drawCanvas.fillText(secondLine, xLoc+leftVal, yLoc+38);
 
   this.drawCanvas.globalAlpha = 1;
 };

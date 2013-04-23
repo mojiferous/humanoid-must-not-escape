@@ -35,6 +35,10 @@ var gameInPlay = false;
 var gameType = 0;
 var resourceSupply = [];
 var currentTurn = 0;
+var currentLevel = 0;
+
+var numHumans = 4;
+var numRobots = 4;
 
 //generic global timeout variable
 var t;
@@ -137,6 +141,10 @@ function handleSpanClick(obj) {
       setNewGameType(2);
       break;
 
+    case 'arcade-one-hole':
+      setNewGameType(10);
+      break;
+
     case 'luck-game':
       activeTool = Math.ceil(Math.random()*7);
       setNewGameType(3);
@@ -146,6 +154,10 @@ function handleSpanClick(obj) {
       $('#game-over').hide();
       $('#game-types').show();
       gameType = 0;
+      break;
+
+    case 'next-level':
+      startNewLevel();
       break;
   }
 
@@ -166,7 +178,7 @@ function handleNewGameKey(keyCode) {
     passedCode = keyCode-55;
   }
 
-  if(passedCode > 0 && passedCode < 4) {
+  if(passedCode > 0 && passedCode < 4 || passedCode == 10) {
     setNewGameType(passedCode);
   }
 }
@@ -185,9 +197,11 @@ function setNewGameType(newGameType) {
         setResources(1);
         break;
       case 2:
+      case 10:
         $('#play-arcade').show();
         setResources(-1);
         break;
+
       case 3:
         $('#play-luck').show();
         setResources(-1);
@@ -195,6 +209,10 @@ function setNewGameType(newGameType) {
     }
 
     currentTurn = 0;
+    currentLevel = 1;
+
+    numHumans = 4;
+    numRobots = 4;
 
     gameType = newGameType;
     gCanvas.initGame();
@@ -205,6 +223,25 @@ function setNewGameType(newGameType) {
 
     redrawBoard();
   }
+}
+
+//start a new level
+function startNewLevel() {
+  currentTurn = 0;
+  //iterate the level counter
+  currentLevel++;
+
+  //add a new human and a new robot
+  if(numHumans < 15) {
+    //limit the maximum number of humans and robots, to prevent infinite looping
+    numHumans++;
+    numRobots++;
+  }
+  gCanvas.initGame();
+  $('#controls').hide();
+  gameInPlay = true;
+
+  redrawBoard();
 }
 
 /**
