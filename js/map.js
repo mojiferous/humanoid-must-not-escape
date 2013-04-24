@@ -721,12 +721,18 @@ MainMap.prototype.checkAchievements = function(hasWon) {
   if(this.robots.length == 0 && this.humans.length == 0 && !hasAchievement(kaKILL_ALL)) {
     //the player just got the "kill them all"
     getAchievement(kaKILL_ALL);
-    retVal+='You got the KILL THEM ALL achievement<br/>';
+    retVal+='You have received the KILL THEM ALL achievement<br/>';
   }
 
   if(hasWon && this.robots.length == numRobots && !hasAchievement(kaCLEAN_WIN)) {
     getAchievement(kaCLEAN_WIN);
-    retVal+='You got the CLEAN WIN achievement<br/>';
+    retVal+='You have received the CLEAN WIN achievement<br/>';
+  }
+
+  if(this.robots.length == 0 && this.humans.length == numHumans && !(hasAchievement(kaRULE_BREAKER))) {
+    //the player got the "rule breaker" achievement
+    getAchievement(kaRULE_BREAKER);
+    retVal+='You have received the RULE BREAKER achievement<br/>';
   }
 
   return retVal;

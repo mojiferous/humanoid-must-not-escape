@@ -10,9 +10,10 @@ var kHUMANS_KILLED = 'totalHumans';
 var kROBOTS_KILLED = 'totalRobots';
 var kTOTAL_WINS = 'totalWins';
 var kMAX_LEVEL = 'maxLevel';
-
+//achievement constants
 var kaKILL_ALL = 'killAll';
 var kaCLEAN_WIN = 'cleanWin';
+var kaRULE_BREAKER = 'ruleBreaker';
 
 /**
  * handle the various variables associated with an object movement

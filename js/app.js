@@ -44,7 +44,7 @@ var numRobots = 4;
 //generic global timeout variable
 var t;
 
-(function ($, window, document, undefined) {
+(function ($, window, document) {
 
   $(window).load(function() {
 
@@ -98,6 +98,7 @@ var t;
       //handle clicks on the UI
       $('#ui-canvas').click(function(e) {
         if(gameInPlay) {
+          //only handle clicks on the ui when the game is running
           gUICanvas.handleClick((e.offsetX || e.clientX - $(e.target).offset().left), (e.offsetY || e.clientY - $(e.target).offset().top));
         }
       });
@@ -277,6 +278,12 @@ function startNewLevel() {
     numHumans++;
     numRobots++;
   }
+
+  if(gameType == 1) {
+    //if we're in "classic" mode, reset the resource allocation
+    setResources(1);
+  }
+
   gCanvas.initGame();
   $('#controls').hide();
   gameInPlay = true;

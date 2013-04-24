@@ -49,28 +49,21 @@ UICanvas.prototype.renderUI = function() {
 
   //render the fire control
   this.drawControlImage(1, 96, 0);
-
   //render the water control
   this.drawControlImage(2, 128, 0);
-
   //render the food control
   this.drawControlImage(3, 192, 0);
-
   //render the wall control
   this.drawControlImage(4, 256, 0);
-
   //render the money control
   this.drawControlImage(5, 288, 0);
-
   //render the electricity control
   this.drawControlImage(6, 320, 0);
-
   //render the gears control
   this.drawControlImage(7, 352, 0);
 
   //draw the humanOverlay control
   this.drawControlImage(9, 32, 0);
-
   //draw the robotOverlay control
   this.drawControlImage(10, 64, 0);
 
@@ -85,10 +78,11 @@ UICanvas.prototype.renderUI = function() {
 
   this.drawStatusImage('red', 0, 50, hasAchievement(kaKILL_ALL), 'kill em', 'ALL');
   this.drawStatusImage('green', 50, 50, hasAchievement(kaCLEAN_WIN), 'clean', 'WIN');
+  this.drawStatusImage('red', 100, 50, hasAchievement(kaRULE_BREAKER), 'rule', 'BREAKR');
 };
 
 /**
- * handle clicks within the ui
+ * handle clicks within the ui, only fired from app.js when the game is running (gameInPlay == true)
  * @param xLoc
  * @param yLoc
  */
@@ -243,4 +237,7 @@ UICanvas.prototype.drawButtonImage = function(buttonType, xLoc, yLoc, isOn) {
       this.drawCanvas.drawImage(this.buttonImages, xCopyLoc+50, 0, 50, 50, xLoc, yLoc, 50, 50);
       break;
   }
+
+  //draw the button frame
+  this.drawCanvas.drawImage(this.buttonImages, 400, 0, 50, 50, xLoc, yLoc, 50, 50);
 };

@@ -171,25 +171,25 @@ a {
 @media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/MAMP\/htdocs\/robotshumans\/sass\/main\.scss}line{font-family:\00003150}}
 .crt-outer {
   background-image: url(../images/crtouter.png);
-  width: 629px;
-  height: 641px;
+  width: 624px;
+  height: 624px;
   display: block;
   pointer-events: none;
-  opacity: .4;
+  opacity: .2;
 }
 
 @media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/MAMP\/htdocs\/robotshumans\/sass\/main\.scss}line{font-family:\00003159}}
 #crt-outer1 {
   position: absolute;
-  left: 25px;
-  top: 18px;
+  left: 23px;
+  top: 24px;
 }
 
 @media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/MAMP\/htdocs\/robotshumans\/sass\/main\.scss}line{font-family:\00003163}}
 #crt-outer2 {
   position: absolute;
-  left: 651px;
-  top: 18px;
+  left: 650px;
+  top: 24px;
 }
 
 @media -sass-debug-info{filename{font-family:file\:\/\/\/Applications\/MAMP\/htdocs\/robotshumans\/sass\/main\.scss}line{font-family:\00003167}}

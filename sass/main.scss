@@ -149,19 +149,19 @@ a {
 
 .crt-outer {
   background-image: url(../images/crtouter.png);
-  width: 629px;
-  height: 641px;
+  width: 624px;
+  height: 624px;
   display: block;
   pointer-events: none;
-  opacity: .4;
+  opacity: .2;
 }
 
 #crt-outer1 {
-  @include screen-pos(25px, 18px);
+  @include screen-pos(23px, 24px);
 }
 
 #crt-outer2 {
-  @include screen-pos(651px, 18px);
+  @include screen-pos(650px, 24px);
 }
 
 #crt1 {
